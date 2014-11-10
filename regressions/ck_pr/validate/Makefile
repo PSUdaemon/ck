@@ -2,7 +2,7 @@
 
 OBJECTS=ck_pr_cas ck_pr_faa ck_pr_inc ck_pr_dec ck_pr_bts \
 	ck_pr_btr ck_pr_btc ck_pr_load ck_pr_store 	  \
-	ck_pr_and ck_pr_or ck_pr_xor ck_pr_add ck_pr_sub  \
+	ck_pr_and ck_pr_or ck_pr_xor ck_pr_add ck_pr_add_cpp ck_pr_sub  \
 	ck_pr_fas ck_pr_bin ck_pr_btx ck_pr_fax ck_pr_n	  \
 	ck_pr_unary
 
@@ -53,6 +53,9 @@ ck_pr_xor: ck_pr_xor.c
 ck_pr_add: ck_pr_add.c
 	$(CC) $(CFLAGS) -o ck_pr_add ck_pr_add.c
 
+ck_pr_add_cpp: ck_pr_add.cpp
+	$(CXX) $(CXXFLAGS) -o ck_pr_add_cpp ck_pr_add.cpp
+
 ck_pr_sub: ck_pr_sub.c
 	$(CC) $(CFLAGS) -o ck_pr_sub ck_pr_sub.c
 
@@ -82,3 +85,4 @@ clean:
 
 include ../../../build/regressions.build
 CFLAGS+=-D_GNU_SOURCE
+CXXFLAGS+=-D_GNU_SOURCE

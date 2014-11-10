@@ -45,6 +45,7 @@ LDNAME_MAJOR="libck.so.$VERSION_MAJOR"
 OPTION_CHECKING=1
 
 export CFLAGS
+export CXXLAGS
 export PREFIX
 LC_ALL=C
 export LC_ALL
@@ -89,6 +90,8 @@ generate()
 	    -e "s#@VERSION_MAJOR@#$VERSION_MAJOR#g"		\
 	    -e "s#@CC@#$CC#g"					\
  	    -e "s#@CFLAGS@#$CFLAGS#g"				\
+	    -e "s#@CXX@#$CXX#g"					\
+	    -e "s#@CXXFLAGS@#$CXXFLAGS#g"			\
  	    -e "s#@HEADERS@#$HEADERS#g"				\
 	    -e "s#@LIBRARY@#$LIBRARY#g"				\
 	    -e "s#@PREFIX@#$PREFIX#g"				\
@@ -98,6 +101,7 @@ generate()
 	    -e "s#@LD@#$LD#g"					\
 	    -e "s#@LDFLAGS@#$LDFLAGS#g"				\
 	    -e "s#@PTHREAD_CFLAGS@#$PTHREAD_CFLAGS#g"		\
+	    -e "s#@PTHREAD_CXXFLAGS@#$PTHREAD_CXXFLAGS#g"	\
 	    -e "s#@MANDIR@#$MANDIR#g"				\
 	    -e "s#@GZIP@#$GZIP#g"				\
 	    -e "s#@GZIP_SUFFIX@#$GZIP_SUFFIX#g"			\
@@ -124,9 +128,12 @@ generate_stdout()
 	echo "            SYSTEM = $SYSTEM"
 	echo "           PROFILE = $PROFILE"
 	echo "                CC = $CC"
+	echo "               CXX = $CXX"
 	echo "          COMPILER = $COMPILER"
 	echo "            CFLAGS = $CFLAGS"
+	echo "          CXXFLAGS = $CXXFLAGS"
 	echo "    PTHREAD_CFLAGS = $PTHREAD_CFLAGS"
+	echo "  PTHREAD_CXXFLAGS = $PTHREAD_CXXFLAGS"
 	echo "                LD = $LD"
 	echo "            LDNAME = $LDNAME"
 	echo "    LDNAME_VERSION = $LDNAME_VERSION"
@@ -178,10 +185,12 @@ for option; do
 		echo "  --vma-bits=N             Specify valid number of VMA bits"
 		echo
 		echo "The following environment variables may be used:"
-		echo "   CC       C compiler command"
-		echo "   CFLAGS   C compiler flags"
-		echo "   LDFLAGS  Linker flags"
-		echo "   GZIP     GZIP compression tool"
+		echo "   CC         C compiler command"
+		echo "   CXX        C++ compiler command"
+		echo "   CFLAGS     C compiler flags"
+		echo "   CXXFLAGS   C++ compiler flags"
+		echo "   LDFLAGS    Linker flags"
+		echo "   GZIP       GZIP compression tool"
 		echo
 		echo "Report bugs to ${MAINTAINER}."
 		exit $EXIT_SUCCESS
@@ -390,6 +399,12 @@ case $PLATFORM in
 					# Needed for cmpxchg8b
 					CFLAGS="$CFLAGS -march=i586"
 				fi
+
+				echo "$CXXFLAGS" | grep -q 'march='
+				if test "$?" -ne 0; then
+					# Needed for cmpxchg8b
+					CXXFLAGS="$CXXFLAGS -march=i586"
+				fi
 				;;
 			linux)
 				case $PLATFORM in
@@ -522,7 +537,7 @@ else
 	GZIP_SUFFIX=".gz"
 fi
 
-printf "Finding suitable compiler........"
+printf "Finding suitable C compiler......"
 CC=`pathsearch "${CC:-cc}"`
 if test -z "$CC" -o ! -x "$CC"; then
 	CC=`pathsearch "${CC:-gcc}"`
@@ -568,11 +583,22 @@ else
 	echo "success [$CC]"
 fi
 
+printf "Finding suitable C++ compiler...."
+CXX=`pathsearch "${CXX:-c++}"`
+if test -z "$CXX" -o ! -x "$CXX"; then
+	CXX=`pathsearch "${CXX:-g++}"`
+fi
+assert "$CXX" "not found"
+
+echo "success [$CXX]"
+
 if test "$COMPILER" = "suncc"; then
 	LD=/bin/ld
 	LDFLAGS="-G -z text -h libck.so.$VERSION_MAJOR $LDFLAGS"
 	CFLAGS="-xO5 $CFLAGS"
+	CXXFLAGS="-xO5 $CXXFLAGS"
 	PTHREAD_CFLAGS="-mt -lpthread"
+	PTHREAD_CXXFLAGS="-mt -lpthread"
 elif test "$COMPILER" = "gcc" || test "$COMPILER" = "clang" || test "$COMPILER" = "mingw32" || test "$COMPILER" = "mingw64"; then
 	LD=$CC
 	SONAME="$LDNAME_MAJOR"
@@ -590,17 +616,21 @@ elif test "$COMPILER" = "gcc" || test "$COMPILER" = "clang" || test "$COMPILER" 
 	if test "$WANT_PIC" = "yes"; then
 		LDFLAGS="$LDFLAGS -shared -fPIC"
 		CFLAGS="$CFLAGS -fPIC"
+		CXXFLAGS="$CXXFLAGS -fPIC"
 		ALL_LIBS="libck.so libck.a"
 		INSTALL_LIBS="install-so install-lib"
 	else
 		LDFLAGS="$LDFLAGS -fno-PIC"
 		CFLAGS="$CFLAGS -fno-PIC"
+		CXXFLAGS="$CXXFLAGS -fno-PIC"
 		ALL_LIBS="libck.a"
 		INSTALL_LIBS="install-lib"
 	fi
 
 	CFLAGS="-D_XOPEN_SOURCE=600 -D_BSD_SOURCE -std=gnu99 -pedantic -Wall -W -Wundef -Wendif-labels -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Wstrict-prototypes -Wmissing-prototypes -Wnested-externs -Winline -Wdisabled-optimization -fstrict-aliasing -O2 -pipe -Wno-parentheses $CFLAGS"
+	CXXFLAGS="-D_XOPEN_SOURCE=600 -D_BSD_SOURCE -std=c++98 -pedantic -Wall -W -Wundef -Wendif-labels -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Winline -Wdisabled-optimization -fstrict-aliasing -O2 -pipe -Wno-parentheses $CXXFLAGS"
 	PTHREAD_CFLAGS="-pthread"
+	PTHREAD_CXXFLAGS="-pthread"
 	if test "$COMPILER" = "mingw64"; then
 		ENVIRONMENT=64
 		PLATFORM=x86_64
@@ -644,7 +674,7 @@ if test "$VMA_BITS" = "unknown"; then
 						return (0);
 					}
 EOF
-					
+
 					$CC -o .1 .1.c 2>/dev/null
 					VMA=`./.1 2>/dev/null`
 					if test $? -ne 0; then
@@ -722,4 +752,3 @@ generate Makefile.in $P_PWD/Makefile
 touch src/*.c
 echo "success"
 generate_stdout
-
