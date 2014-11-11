@@ -61,7 +61,7 @@ serial(ck_stack_t *stack)
 
 	ck_stack_init(stack);
 
-	entries = malloc(sizeof(struct entry) * SIZE);
+	entries = (struct entry *)malloc(sizeof(struct entry) * SIZE);
 	assert(entries != NULL);
 
 	LOOP(ck_stack_push_upmc, ck_stack_pop_upmc);

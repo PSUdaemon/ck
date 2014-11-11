@@ -39,6 +39,7 @@
 #include <pthread.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <inttypes.h>
 
 #include "../../common.h"
 
@@ -77,7 +78,7 @@ CK_STACK_CONTAINER(struct entry, next, getvalue)
 #endif
 
 static struct affinity affinerator;
-static unsigned long long nthr;
+static uint64_t nthr;
 static volatile unsigned int barrier = 0;
 static unsigned int critical;
 
@@ -87,8 +88,8 @@ stack_thread(void *buffer)
 #if (defined(MPMC) && defined(CK_F_STACK_POP_MPMC)) || (defined(UPMC) && defined(CK_F_STACK_POP_UPMC)) || (defined(TRYUPMC) && defined(CK_F_STACK_TRYPOP_UPMC)) || (defined(TRYMPMC) && defined(CK_F_STACK_TRYPOP_MPMC))
 	ck_stack_entry_t *ref;
 #endif
-	struct entry *entry = buffer;
-	unsigned long long i, n = ITEMS;
+	struct entry *entry = (struct entry *)buffer;
+	uint64_t i, n = ITEMS;
 	unsigned int seed;
 	int j;
 
@@ -168,7 +169,7 @@ int
 main(int argc, char *argv[])
 {
 	struct entry *bucket;
-	unsigned long long i, d;
+	uint64_t i, d;
 	pthread_t *thread;
 	struct timeval stv, etv;
 
@@ -214,10 +215,10 @@ main(int argc, char *argv[])
 	affinerator.request = 0;
 	affinerator.delta = d;
 
-	bucket = malloc(sizeof(struct entry) * nthr);
+	bucket = (struct entry *)malloc(sizeof(struct entry) * nthr);
 	assert(bucket != NULL);
 
-	thread = malloc(sizeof(pthread_t) * nthr);
+	thread = (pthread_t *)malloc(sizeof(pthread_t) * nthr);
 	assert(thread != NULL);
 
 	for (i = 0; i < nthr; i++)
@@ -243,7 +244,7 @@ main(int argc, char *argv[])
 #ifdef _WIN32
 	printf("%3llu %.6f\n", nthr, TVTOD(etv) - TVTOD(stv));
 #else
-	printf("%3llu %.6lf\n", nthr, TVTOD(etv) - TVTOD(stv));
+	printf("%3" PRIu64 " %.6f\n", nthr, TVTOD(etv) - TVTOD(stv));
 #endif
 	return 0;
 }

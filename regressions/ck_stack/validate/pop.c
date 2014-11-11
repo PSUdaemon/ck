@@ -39,6 +39,7 @@
 #include <pthread.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <inttypes.h>
 
 #include "../../common.h"
 
@@ -72,7 +73,7 @@ CK_STACK_CONTAINER(struct entry, next, getvalue)
 #endif
 
 static struct affinity affinerator = AFFINITY_INITIALIZER;
-static unsigned long long nthr;
+static uint64_t nthr;
 static volatile unsigned int barrier = 0;
 static unsigned int critical;
 
@@ -83,7 +84,7 @@ stack_thread(void *unused CK_CC_UNUSED)
 	ck_stack_entry_t *ref;
 #endif
 	struct entry *entry = NULL;
-	unsigned long long i, n = ITEMS / nthr;
+	uint64_t i, n = ITEMS / nthr;
 	unsigned int seed;
 	int j, previous = INT_MAX;
 
@@ -154,7 +155,7 @@ stack_assert(void)
 static void
 push_stack(struct entry *bucket)
 {
-	unsigned long long i;
+	uint64_t i;
 
 #ifdef SPINLOCK
 	stack = NULL;
@@ -188,7 +189,7 @@ int
 main(int argc, char *argv[])
 {
 	struct entry *bucket;
-	unsigned long long i, d;
+	uint64_t i, d;
 	pthread_t *thread;
 	struct timeval stv, etv;
 
@@ -232,10 +233,10 @@ main(int argc, char *argv[])
 	srand(getpid());
 
 	affinerator.delta = d;
-	bucket = malloc(sizeof(struct entry) * ITEMS);
+	bucket = (struct entry *)malloc(sizeof(struct entry) * ITEMS);
 	assert(bucket != NULL);
 
-	thread = malloc(sizeof(pthread_t) * nthr);
+	thread = (pthread_t *)malloc(sizeof(pthread_t) * nthr);
 	assert(thread != NULL);
 
 	push_stack(bucket);
@@ -263,7 +264,7 @@ main(int argc, char *argv[])
 #ifdef _WIN32
 	printf("%3llu %.6f\n", nthr, TVTOD(etv) - TVTOD(stv));
 #else
-	printf("%3llu %.6lf\n", nthr, TVTOD(etv) - TVTOD(stv));
+	printf("%3" PRIu64 " %.6f\n", nthr, TVTOD(etv) - TVTOD(stv));
 #endif
 	return 0;
 }
