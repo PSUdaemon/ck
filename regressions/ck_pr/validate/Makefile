@@ -53,8 +53,8 @@ ck_pr_xor: ck_pr_xor.c
 ck_pr_add: ck_pr_add.c
 	$(CC) $(CFLAGS) -o ck_pr_add ck_pr_add.c
 
-ck_pr_add_cpp: ck_pr_add.cpp
-	$(CXX) $(CXXFLAGS) -o ck_pr_add_cpp ck_pr_add.cpp
+ck_pr_add_cpp: ck_pr_add.c
+	$(CXX) $(CXXFLAGS) -o ck_pr_add_cpp ck_pr_add.c
 
 ck_pr_sub: ck_pr_sub.c
 	$(CC) $(CFLAGS) -o ck_pr_sub ck_pr_sub.c

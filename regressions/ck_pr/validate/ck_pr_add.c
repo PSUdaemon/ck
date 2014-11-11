@@ -38,6 +38,12 @@
 #define R_REPEAT 200000
 #endif
 
+#ifdef __cplusplus
+#define SUFFIX "cpp_"
+#else
+#define SUFFIX
+#endif
+
 #define CK_PR_ADD_T(w, v, d)							\
 	{									\
 		uint##w##_t t = v;						\
@@ -53,7 +59,7 @@
 #define CK_PR_ADD_B(w)								\
 	{									\
 		unsigned int __ck_i = 0;					\
-		printf("ck_pr_add_" #w ": ");					\
+		printf("ck_pr_add_" SUFFIX#w ": ");				\
 		if (w < 10)							\
 			printf(" ");						\
 		for (__ck_i = 0; __ck_i < R_REPEAT; __ck_i++) {			\
