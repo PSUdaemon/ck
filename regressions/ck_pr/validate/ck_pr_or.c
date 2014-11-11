@@ -43,7 +43,7 @@
 #define CK_PR_OR_T(w, v, d)							\
 	{									\
 		uint##w##_t t;							\
-		ck_pr_or_##w(&t, 1ULL << (w - 1));				\
+		ck_pr_or_##w(&t, (uint64_t)1 << (w - 1));			\
 		t = v;								\
 		ck_pr_or_##w(&t, d);						\
 		if (t != (uint##w##_t)(v | d)) {				\
