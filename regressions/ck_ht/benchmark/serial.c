@@ -188,7 +188,7 @@ main(int argc, char *argv[])
 	unsigned int d = 0;
 	uint64_t s, e, a, ri, si, ai, sr, rg, sg, ag, sd, ng, gg;
 	char **t;
-	struct ck_ht_stat st;
+	struct ck_ht_stats st;
 
 	r = 20;
 	s = 8;
