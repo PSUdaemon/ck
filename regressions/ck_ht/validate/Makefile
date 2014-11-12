@@ -4,6 +4,12 @@ OBJECTS=serial serial.delete serial_cpp serial.delete_cpp
 
 all: $(OBJECTS)
 
+check: all
+	for d in $(OBJECTS) ; do        \
+		echo $$d;		\
+		./$$d || exit 1;     	\
+	done;
+
 serial: serial.c
 	$(CC) $(CFLAGS) -o serial serial.c ../../../src/libck.a
 
@@ -15,12 +21,6 @@ serial_cpp: serial.c
 
 serial.delete_cpp: serial.c
 	$(CXX) $(CXXFLAGS) -DHT_DELETE -o serial.delete_cpp serial.c ../../../src/libck.a
-
-check: all
-	./serial || exit 1
-	./serial.delete || exit 1
-	./serial_cpp || exit 1
-	./serial.delete_cpp || exit 1
 
 clean:
 	rm -rf *~ *.o $(OBJECTS) *.dSYM *.exe
