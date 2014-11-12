@@ -65,7 +65,9 @@ regressions/ck_ht/benchmark/parallel_direct
 regressions/ck_ht/benchmark/serial
 regressions/ck_ht/benchmark/serial.delete
 regressions/ck_ht/validate/serial
+regressions/ck_ht/validate/serial_cpp
 regressions/ck_ht/validate/serial.delete
+regressions/ck_ht/validate/serial.delete_cpp
 regressions/ck_pflock/benchmark/latency
 regressions/ck_pflock/benchmark/throughput
 regressions/ck_pflock/validate/validate

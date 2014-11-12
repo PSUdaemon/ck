@@ -52,10 +52,7 @@ ht_free(void *p, size_t b, bool r)
 	return;
 }
 
-static struct ck_malloc my_allocator = {
-	.malloc = ht_malloc,
-	.free = ht_free
-};
+static struct ck_malloc my_allocator;
 
 const char *test[] = {"Samy", "Al", "Bahra", "dances", "in", "the", "wind.", "Once",
 			"upon", "a", "time", "his", "gypsy", "ate", "one", "itsy",
@@ -78,6 +75,9 @@ main(void)
 	ck_ht_iterator_t iterator = CK_HT_ITERATOR_INITIALIZER;
 	ck_ht_entry_t *cursor;
 	unsigned int mode = CK_HT_MODE_BYTESTRING;
+
+	my_allocator.malloc = ht_malloc;
+	my_allocator.free = ht_free;
 
 #ifdef HT_DELETE
 	mode |= CK_HT_WORKLOAD_DELETE;
@@ -107,14 +107,14 @@ main(void)
 		if (ck_ht_get_spmc(&ht, h, &entry) == false) {
 			ck_error("ERROR (put): Failed to find [%s]\n", test[i]);
 		} else {
-			void *k, *v;
+			char *k, *v;
 
-			k = ck_ht_entry_key(&entry);
-			v = ck_ht_entry_value(&entry);
+			k = (char *)ck_ht_entry_key(&entry);
+			v = (char *)ck_ht_entry_value(&entry);
 
 			if (strcmp(k, test[i]) || strcmp(v, test[i])) {
 				ck_error("ERROR: Mismatch: (%s, %s) != (%s, %s)\n",
-				    (char *)k, (char *)v, test[i], test[i]);
+				    k, v, test[i], test[i]);
 			}
 		}
 	}
@@ -180,14 +180,14 @@ main(void)
 		if (ck_ht_get_spmc(&ht, h, &entry) == false) {
 			ck_error("ERROR (set): Failed to find [%s]\n", test[i]);
 		} else {
-			void *k, *v;
+			char *k, *v;
 
-			k = ck_ht_entry_key(&entry);
-			v = ck_ht_entry_value(&entry);
+			k = (char *)ck_ht_entry_key(&entry);
+			v = (char *)ck_ht_entry_value(&entry);
 
 			if (strcmp(k, test[i]) || strcmp(v, test[i])) {
 				ck_error("ERROR: Mismatch: (%s, %s) != (%s, %s)\n",
-				    (char *)k, (char *)v, test[i], test[i]);
+				    k, v, test[i], test[i]);
 			}
 		}
 	}
@@ -208,7 +208,7 @@ main(void)
 		if (strcmp(test[i], "down.") == 0)
 			continue;
 
-		if (strcmp(ck_ht_entry_value(&entry), test[i]) != 0) {
+		if (strcmp((char *)ck_ht_entry_value(&entry), test[i]) != 0) {
 			ck_error("Mismatch detected: %s, expected %s\n",
 				(char *)ck_ht_entry_value(&entry),
 				test[i]);
@@ -217,7 +217,7 @@ main(void)
 
 	ck_ht_iterator_init(&iterator);
 	while (ck_ht_next(&ht, &iterator, &cursor) == true) {
-		if (strcmp(ck_ht_entry_value(cursor), "REPLACED") != 0) {
+		if (strcmp((char *)ck_ht_entry_value(cursor), "REPLACED") != 0) {
 			ck_error("Mismatch detected: %s, expected REPLACED\n",
 				(char *)ck_ht_entry_value(cursor));
 		}
@@ -272,7 +272,7 @@ main(void)
 
 	ck_ht_iterator_init(&iterator);
 	while (ck_ht_next(&ht, &iterator, &cursor) == true) {
-		if (strcmp(ck_ht_entry_value(cursor), "REPLACED") != 0) {
+		if (strcmp((char *)ck_ht_entry_value(cursor), "REPLACED") != 0) {
 			ck_error("Mismatch detected: %s, expected REPLACED\n",
 				(char *)ck_ht_entry_value(cursor));
 		}
