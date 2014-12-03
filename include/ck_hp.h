@@ -73,6 +73,10 @@ struct ck_hp_record {
 } CK_CC_CACHELINE;
 typedef struct ck_hp_record ck_hp_record_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 CK_CC_INLINE static void
 ck_hp_set(struct ck_hp_record *record, unsigned int i, void *pointer)
 {
@@ -102,5 +106,9 @@ void ck_hp_reclaim(ck_hp_record_t *);
 void ck_hp_free(ck_hp_record_t *, ck_hp_hazard_t *, void *, void *);
 void ck_hp_retire(ck_hp_record_t *, ck_hp_hazard_t *, void *, void *);
 void ck_hp_purge(ck_hp_record_t *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _CK_HP_H */

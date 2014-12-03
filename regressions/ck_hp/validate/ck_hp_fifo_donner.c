@@ -75,7 +75,7 @@ queue_50_50(void *elements)
         unsigned long j, element_count = *(unsigned long *)elements;
 	unsigned int seed;
 
-	record = malloc(sizeof(ck_hp_record_t));
+	record = (ck_hp_record_t *)malloc(sizeof(ck_hp_record_t));
 	assert(record);
 
 	slots = malloc(CK_HP_FIFO_SLOTS_SIZE);
@@ -89,7 +89,7 @@ queue_50_50(void *elements)
          * record.
          * FIFO queue needs 2 hazard pointers.
          */
-        ck_hp_register(&fifo_hp, record, slots);
+        ck_hp_register(&fifo_hp, record, (void **)slots);
 
 	/* start barrier */
 	ck_pr_inc_uint(&start_barrier);
@@ -101,14 +101,14 @@ queue_50_50(void *elements)
 		/* rand_r with thread local state should be thread safe */
 		if( 50 < (1+(int) (100.0*common_rand_r(&seed)/(RAND_MAX+1.0)))) {
 			/* This is the container for the enqueued data. */
-        		fifo_entry = malloc(sizeof(ck_hp_fifo_entry_t));
+			fifo_entry = (ck_hp_fifo_entry_t *)malloc(sizeof(ck_hp_fifo_entry_t));
 
         		if (fifo_entry == NULL) {
         	        	exit(EXIT_FAILURE);
 			}
 
         		/* This is the data. */
-        		entry = malloc(sizeof(struct entry));
+			entry = (struct entry *)malloc(sizeof(struct entry));
         		if (entry != NULL) {
         	        	entry->value = j;
 			}
@@ -162,10 +162,10 @@ main(int argc, char** argv)
         thread_count = atoi(argv[1]);
 
 	/* pthread handles */
-	thr = malloc(sizeof(pthread_t) * thread_count);
+	thr = (pthread_t *)malloc(sizeof(pthread_t) * thread_count);
 
 	/* array for local operation count */
-	count = malloc(sizeof(unsigned long *) * thread_count);
+	count = (unsigned long *)malloc(sizeof(unsigned long *) * thread_count);
 
         /*
          * Initialize global hazard pointer safe memory reclamation to execute free()
@@ -178,7 +178,7 @@ main(int argc, char** argv)
 	ck_hp_init(&fifo_hp, CK_HP_FIFO_SLOTS_COUNT, 100, destructor);
 
         /* The FIFO requires one stub entry on initialization. */
-        stub = malloc(sizeof(ck_hp_fifo_entry_t));
+        stub = (ck_hp_fifo_entry_t *)malloc(sizeof(ck_hp_fifo_entry_t));
 
         /* Behavior is undefined if stub is NULL. */
         if (stub == NULL) {

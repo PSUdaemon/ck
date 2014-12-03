@@ -67,14 +67,14 @@ main(int argc, char *argv[])
 
 	ck_hp_init(&state, 1, 1, destructor);
 
-	pointers = malloc(sizeof(void *));
+	pointers = (void **)malloc(sizeof(void *));
 	if (pointers == NULL) {
 		ck_error("ERROR: Failed to allocate slot.\n");
 	}
 	ck_hp_register(&state, &record[0], pointers);
 	ck_hp_reclaim(&record[0]);
 
-	entry = malloc(sizeof *entry);
+	entry = (struct entry *)malloc(sizeof *entry);
 	ck_hp_set(&record[0], 0, entry);
 	ck_hp_reclaim(&record[0]);
 	ck_hp_free(&record[0], &entry->hazard, entry, entry);
@@ -82,7 +82,7 @@ main(int argc, char *argv[])
 	ck_hp_set(&record[0], 0, NULL);
 	ck_hp_reclaim(&record[0]);
 
-	entry = malloc(sizeof *entry);
+	entry = (struct entry *)malloc(sizeof *entry);
 	ck_hp_set(&record[0], 0, entry);
 	ck_hp_reclaim(&record[0]);
 	ck_hp_free(&record[0], &entry->hazard, entry, entry);
@@ -90,14 +90,14 @@ main(int argc, char *argv[])
 	ck_hp_set(&record[0], 0, NULL);
 	ck_hp_reclaim(&record[0]);
 
-	pointers = malloc(sizeof(void *));
+	pointers = (void **)malloc(sizeof(void *));
 	if (pointers == NULL) {
 		ck_error("ERROR: Failed to allocate slot.\n");
 	}
 	ck_hp_register(&state, &record[1], pointers);
 	ck_hp_reclaim(&record[1]);
 
-	entry = malloc(sizeof *entry);
+	entry = (struct entry *)malloc(sizeof *entry);
 	ck_hp_set(&record[1], 0, entry);
 	ck_hp_reclaim(&record[1]);
 	ck_hp_free(&record[1], &entry->hazard, entry, entry);
@@ -106,13 +106,13 @@ main(int argc, char *argv[])
 	ck_hp_reclaim(&record[1]);
 
 	printf("Allocating entry and freeing in other HP record...\n");
-	entry = malloc(sizeof *entry);
+	entry = (struct entry *)malloc(sizeof *entry);
 	entry->value = 42;
 	ck_hp_set(&record[0], 0, entry);
 	ck_hp_free(&record[1], &entry->hazard, entry, entry);
 	ck_pr_store_uint(&entry->value, 1);
 
-	other = malloc(sizeof *other);
+	other = (struct entry *)malloc(sizeof *other);
 	other->value = 24;
 	ck_hp_set(&record[1], 0, other);
 	ck_hp_free(&record[0], &other->hazard, other, other);

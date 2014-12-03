@@ -96,7 +96,7 @@ stack_push_mpmc(struct stack *target, struct stack_entry *entry)
 	struct stack_entry *lstack;
 	ck_backoff_t backoff = CK_BACKOFF_INITIALIZER;
 
-	lstack = ck_pr_load_ptr(&target->head);
+	lstack = (struct stack_entry *)ck_pr_load_ptr(&target->head);
 	ck_pr_store_ptr(&entry->next, lstack);
 
 	while (ck_pr_cas_ptr_value(&target->head, lstack, entry, &lstack) == false) {
@@ -117,7 +117,7 @@ stack_pop_mpmc(ck_hp_record_t *record, struct stack *target)
 	ck_backoff_t backoff = CK_BACKOFF_INITIALIZER;
 
 	do {
-		entry = ck_pr_load_ptr(&target->head);
+		entry = (struct stack_entry *)ck_pr_load_ptr(&target->head);
 		if (entry == NULL)
 			return (NULL);
 
@@ -150,7 +150,7 @@ thread(void *unused CK_CC_UNUSED)
 	unsigned int r = (unsigned int)(tid + 1) * 0x5bd1e995;
 
 	unused = NULL;
-	pointers = malloc(sizeof(void *));
+	pointers = (void **)malloc(sizeof(void *));
 	ck_hp_register(&stack_hp, &record, pointers);
 
 	if (aff_iterate(&a)) {
@@ -166,7 +166,7 @@ thread(void *unused CK_CC_UNUSED)
 		r ^= r << 6; r ^= r >> 21; r ^= r << 7;
 
 		if (r & 0x1000) {
-			entry = malloc(sizeof(struct node));
+			entry = (struct node *)malloc(sizeof(struct node));
 			assert(entry);
 			stack_push_mpmc(&stack, &entry->stack_entry);
 			ck_pr_inc_uint(&pushs);
@@ -209,7 +209,7 @@ main(int argc, char *argv[])
 	a.delta = atoi(argv[3]);
 	a.request = 0;
 
-	threads = malloc(sizeof(pthread_t) * n_threads);
+	threads = (pthread_t *)malloc(sizeof(pthread_t) * n_threads);
 
 	ck_hp_init(&stack_hp, 1, threshold, destructor);
 

@@ -59,7 +59,7 @@ static unsigned int e_barrier;
 static void *
 test(void *c)
 {
-	struct context *context = c;
+	struct context *context = (struct context *)c;
 	struct entry *entry;
 	ck_hp_fifo_entry_t *fifo_entry;
 	ck_hp_record_t record;
@@ -70,14 +70,14 @@ test(void *c)
                 exit(EXIT_FAILURE);
         }
 
-	ck_hp_register(&fifo_hp, &record, malloc(sizeof(void *) * 2));
+	ck_hp_register(&fifo_hp, &record, (void **)malloc(sizeof(void *) * 2));
 	ck_pr_inc_uint(&barrier);
 	while (ck_pr_load_uint(&barrier) < (unsigned int)nthr);
 
 	for (i = 0; i < ITERATIONS; i++) {
 		for (j = 0; j < size; j++) {
-			fifo_entry = malloc(sizeof(ck_hp_fifo_entry_t));
-			entry = malloc(sizeof(struct entry));
+			fifo_entry = (ck_hp_fifo_entry_t *)malloc(sizeof(ck_hp_fifo_entry_t));
+			entry = (struct entry *)malloc(sizeof(struct entry));
 			entry->tid = context->tid;
 			ck_hp_fifo_enqueue_mpmc(&record, &fifo, fifo_entry, entry);
 
@@ -100,8 +100,8 @@ test(void *c)
 
 	for (i = 0; i < ITERATIONS; i++) {
 		for (j = 0; j < size; j++) {
-			fifo_entry = malloc(sizeof(ck_hp_fifo_entry_t));
-			entry = malloc(sizeof(struct entry));
+			fifo_entry = (ck_hp_fifo_entry_t *)malloc(sizeof(ck_hp_fifo_entry_t));
+			entry = (struct entry *)malloc(sizeof(struct entry));
 			entry->tid = context->tid;
 
 			while (ck_hp_fifo_tryenqueue_mpmc(&record, &fifo, fifo_entry, entry) == false)
@@ -155,14 +155,14 @@ main(int argc, char *argv[])
 	threshold = atoi(argv[4]);
 	assert(threshold > 0);
 
-	context = malloc(sizeof(*context) * nthr);
+	context = (struct context *)malloc(sizeof(*context) * nthr);
 	assert(context);
 
-	thread = malloc(sizeof(pthread_t) * nthr);
+	thread = (pthread_t *)malloc(sizeof(pthread_t) * nthr);
 	assert(thread);
 
 	ck_hp_init(&fifo_hp, 2, threshold, destructor);
-	ck_hp_fifo_init(&fifo, malloc(sizeof(ck_hp_fifo_entry_t)));
+	ck_hp_fifo_init(&fifo, (ck_hp_fifo_entry_t *)malloc(sizeof(ck_hp_fifo_entry_t)));
 
 	ck_hp_fifo_entry_t *entry;
 	ck_hp_fifo_deinit(&fifo, &entry);
@@ -171,7 +171,7 @@ main(int argc, char *argv[])
 		ck_error("ERROR: Expected non-NULL stub node.\n");
 
 	free(entry);
-	ck_hp_fifo_init(&fifo, malloc(sizeof(ck_hp_fifo_entry_t)));
+	ck_hp_fifo_init(&fifo, (ck_hp_fifo_entry_t *)malloc(sizeof(ck_hp_fifo_entry_t)));
 
 	for (i = 0; i < nthr; i++) {
 		context[i].tid = i;

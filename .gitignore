@@ -51,10 +51,15 @@ regressions/ck_fifo/validate/ck_fifo_spsc_iterator
 regressions/ck_hp/benchmark/fifo_latency
 regressions/ck_hp/benchmark/stack_latency
 regressions/ck_hp/validate/ck_hp_fifo
+regressions/ck_hp/validate/ck_hp_fifo_cpp
 regressions/ck_hp/validate/ck_hp_fifo_donner
+regressions/ck_hp/validate/ck_hp_fifo_donner_cpp
 regressions/ck_hp/validate/ck_hp_stack
+regressions/ck_hp/validate/ck_hp_stack_cpp
 regressions/ck_hp/validate/nbds_haz_test
+regressions/ck_hp/validate/nbds_haz_test_cpp
 regressions/ck_hp/validate/serial
+regressions/ck_hp/validate/serial_cpp
 regressions/ck_hs/benchmark/parallel_bytestring
 regressions/ck_hs/benchmark/parallel_bytestring.delete
 regressions/ck_hs/benchmark/serial
