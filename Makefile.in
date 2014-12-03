@@ -24,7 +24,7 @@ doc:
 	$(MAKE) -C doc all || exit
 	@echo ---[ Manual pages are ready for installation.
 
-regressions:
+regressions: all
 	$(MAKE) -C regressions all || exit
 	@echo ---[ Regressions have built successfully.
 
