@@ -91,7 +91,7 @@ struct ck_hs {
 };
 typedef struct ck_hs ck_hs_t;
 
-struct ck_hs_stat {
+struct ck_hs_stats {
 	unsigned long tombstones;
 	unsigned long n_entries;
 	unsigned int probe_maximum;
@@ -107,6 +107,10 @@ typedef struct ck_hs_iterator ck_hs_iterator_t;
 
 /* Convenience wrapper to table hash function. */
 #define CK_HS_HASH(T, F, K) F((K), (T)->seed)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef void *ck_hs_apply_fn_t(void *, void *);
 bool ck_hs_apply(ck_hs_t *, unsigned long, const void *, ck_hs_apply_fn_t *, void *);
@@ -129,6 +133,10 @@ bool ck_hs_gc(ck_hs_t *, unsigned long, unsigned long);
 unsigned long ck_hs_count(ck_hs_t *);
 bool ck_hs_reset(ck_hs_t *);
 bool ck_hs_reset_size(ck_hs_t *, unsigned long);
-void ck_hs_stat(ck_hs_t *, struct ck_hs_stat *);
+void ck_hs_stat(ck_hs_t *, struct ck_hs_stats *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _CK_HS_H */

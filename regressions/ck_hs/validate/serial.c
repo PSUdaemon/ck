@@ -52,10 +52,7 @@ hs_free(void *p, size_t b, bool r)
 	return;
 }
 
-static struct ck_malloc my_allocator = {
-	.malloc = hs_malloc,
-	.free = hs_free
-};
+static struct ck_malloc my_allocator;
 
 const char *test[] = { "Samy", "Al", "Bahra", "dances", "in", "the", "wind.", "Once",
 			"upon", "a", "time", "his", "gypsy", "ate", "one", "itsy",
@@ -70,7 +67,7 @@ const char *negative = "negative";
 static unsigned long
 hs_hash(const void *object, unsigned long seed)
 {
-	const char *c = object;
+	const char *c = (const char *)object;
 	unsigned long h;
 
 	(void)seed;
@@ -82,14 +79,14 @@ static bool
 hs_compare(const void *previous, const void *compare)
 {
 
-	return strcmp(previous, compare) == 0;
+	return strcmp((const char *)previous, (const char *)compare) == 0;
 }
 
 static void *
 test_ip(void *key, void *closure)
 {
-	const char *a = key;
-	const char *b = closure;
+	const char *a = (const char *)key;
+	const char *b = (const char *)closure;
 
 	if (strcmp(a, b) != 0)
 		ck_error("Mismatch: %s != %s\n", a, b);
@@ -229,7 +226,7 @@ run_test(unsigned int is, unsigned int ad)
 				ck_error("ERROR [%u]: remove must not fail\n", is);
 			}
 
-			if (strcmp(r, test[i]) != 0) {
+			if (strcmp((const char *)r, test[i]) != 0) {
 				ck_error("ERROR [%u]: Removed incorrect node (%s != %s)\n", (char *)r, test[i], is);
 			}
 		}
@@ -246,7 +243,7 @@ run_test(unsigned int is, unsigned int ad)
 			}
 
 			/* Expected replacement. */
-			if (d == true && (r == NULL || strcmp(r, test[i]) != 0)) {
+			if (d == true && (r == NULL || strcmp((const char *)r, test[i]) != 0)) {
 				ck_error("ERROR [%u]: Incorrect previous value: %s != %s\n",
 				    is, test[i], (char *)r);
 			}
@@ -255,7 +252,7 @@ run_test(unsigned int is, unsigned int ad)
 			if (ck_hs_fas(&hs[j], h, test[i], &r) == false)
 				ck_error("ERROR [%u]: ck_hs_fas must succeed.\n", is);
 
-			if (strcmp(r, test[i]) != 0) {
+			if (strcmp((const char *)r, test[i]) != 0) {
 				ck_error("ERROR [%u]: Incorrect replaced value: %s != %s\n",
 				    is, test[i], (char *)r);
 			}
@@ -267,7 +264,7 @@ run_test(unsigned int is, unsigned int ad)
 				ck_error("ERROR [%u]: Failed to set [1]\n", is);
 			}
 
-			if (strcmp(r, test[i]) != 0) {
+			if (strcmp((const char *)r, test[i]) != 0) {
 				ck_error("ERROR [%u]: Invalid &hs[j]: %s != %s\n", is, test[i], (char *)r);
 			}
 
@@ -303,6 +300,9 @@ int
 main(void)
 {
 	unsigned int k;
+
+	my_allocator.malloc = hs_malloc;
+	my_allocator.free = hs_free;
 
 	for (k = 16; k <= 64; k <<= 1) {
 		run_test(k, 0);
