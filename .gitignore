@@ -31,6 +31,7 @@ regressions/ck_barrier/validate/barrier_dissemination
 regressions/ck_barrier/validate/barrier_mcs
 regressions/ck_barrier/validate/barrier_tournament
 regressions/ck_bitmap/validate/serial
+regressions/ck_bitmap/validate/serial_cpp
 regressions/ck_brlock/benchmark/latency
 regressions/ck_brlock/benchmark/throughput
 regressions/ck_brlock/validate/validate

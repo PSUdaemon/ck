@@ -114,7 +114,7 @@
 
 struct ck_bitmap {
 	unsigned int n_bits;
-	unsigned int map[];
+	unsigned int map[1];
 };
 typedef struct ck_bitmap ck_bitmap_t;
 

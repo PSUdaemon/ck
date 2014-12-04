@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <inttypes.h>
 
 #include "../../common.h"
 
@@ -158,7 +159,7 @@ test_init(bool init)
 	unsigned int i;
 
 	bytes = ck_bitmap_size(length);
-	bitmap = malloc(bytes);
+	bitmap = (ck_bitmap_t *)malloc(bytes);
 	memset(bitmap, random(), bytes);
 
 	ck_bitmap_init(bitmap, length, init);
@@ -184,7 +185,7 @@ random_init(void)
 	ck_bitmap_t *bitmap;
 	unsigned int i;
 
-	bitmap = malloc(ck_bitmap_size(length));
+	bitmap = (ck_bitmap_t *)malloc(ck_bitmap_size(length));
 	ck_bitmap_init(bitmap, length, false);
 
 	for (i = 0; i < length; i++) {
@@ -202,7 +203,7 @@ copy(const ck_bitmap_t *src)
 	ck_bitmap_t *bitmap;
 	size_t bytes = ck_bitmap_size(ck_bitmap_bits(src));
 
-	bitmap = malloc(bytes);
+	bitmap = (ck_bitmap_t *)malloc(bytes);
 	memcpy(bitmap, src, bytes);
 	return bitmap;
 }
@@ -325,7 +326,7 @@ main(int argc, char *argv[])
 	fprintf(stderr, "Configuration: %u bytes\n",
 	    bytes);
 
-	g_bits = malloc(bytes);
+	g_bits = (ck_bitmap_t *)malloc(bytes);
 	memset(g_bits->map, 0xFF, base);
 	ck_bitmap_init(g_bits, length, false);
 	test(g_bits, length, false);
@@ -337,7 +338,7 @@ main(int argc, char *argv[])
 	ck_bitmap_test(g_bits, length - 1);
 
 	CK_BITMAP_INSTANCE(STATIC_LENGTH) sb;
-	fprintf(stderr, "Static configuration: %zu bytes\n",
+	fprintf(stderr, "Static configuration: %" PRIu64 " bytes\n",
 	    sizeof(sb));
 	memset(CK_BITMAP_BUFFER(&sb), 0xFF, ck_bitmap_base(STATIC_LENGTH));
 	CK_BITMAP_INIT(&sb, STATIC_LENGTH, false);
