@@ -40,6 +40,7 @@ regressions/ck_bitmap/validate/serial_cpp
 regressions/ck_brlock/benchmark/latency
 regressions/ck_brlock/benchmark/throughput
 regressions/ck_brlock/validate/validate
+regressions/ck_brlock/validate/validate_cpp
 regressions/ck_bytelock/benchmark/latency
 regressions/ck_bytelock/validate/validate
 regressions/ck_cohort/benchmark/ck_cohort.LATENCY
