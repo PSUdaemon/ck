@@ -20,6 +20,7 @@ GRTAGS
 GTAGS
 ID
 regressions/ck_array/validate/serial
+regressions/ck_array/validate/serial_cpp
 regressions/ck_backoff/validate/validate
 regressions/ck_bag/validate/order
 regressions/ck_barrier/benchmark/throughput

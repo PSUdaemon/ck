@@ -12,7 +12,6 @@
 static void
 my_free(void *p, size_t m, bool d)
 {
-
 	(void)m;
 	(void)d;
 
@@ -23,14 +22,12 @@ my_free(void *p, size_t m, bool d)
 static void *
 my_malloc(size_t b)
 {
-
 	return malloc(b);
 }
 
 static void *
 my_realloc(void *r, size_t a, size_t b, bool d)
 {
-
 	(void)a;
 	(void)d;
 
@@ -44,11 +41,11 @@ main(void)
 	uintptr_t i;
 	ck_array_t array;
 	ck_array_iterator_t iterator;
-	struct ck_malloc m = {
-		.malloc = my_malloc,
-		.free = NULL,
-		.realloc = my_realloc
-	};
+	struct ck_malloc m;
+
+	m.malloc = my_malloc;
+	m.free = NULL;
+	m.realloc = my_realloc;
 
 	if (ck_array_init(&array, CK_ARRAY_MODE_SPMC, &m, 4) == true)
 		ck_error("ck_array_init with NULL free succeeded\n");
