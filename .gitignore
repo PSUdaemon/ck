@@ -43,6 +43,7 @@ regressions/ck_brlock/validate/validate
 regressions/ck_brlock/validate/validate_cpp
 regressions/ck_bytelock/benchmark/latency
 regressions/ck_bytelock/validate/validate
+regressions/ck_bytelock/validate/validate_cpp
 regressions/ck_cohort/benchmark/ck_cohort.LATENCY
 regressions/ck_cohort/benchmark/ck_cohort.LATENCY
 regressions/ck_cohort/benchmark/ck_cohort.THROUGHPUT
