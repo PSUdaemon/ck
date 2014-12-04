@@ -39,10 +39,14 @@ regressions/ck_cohort/benchmark/ck_cohort.LATENCY
 regressions/ck_cohort/benchmark/ck_cohort.THROUGHPUT
 regressions/ck_cohort/benchmark/ck_cohort.THROUGHPUT
 regressions/ck_cohort/validate/validate
+regressions/ck_epoch/validate/ck_epoch_call
+regressions/ck_epoch/validate/ck_epoch_call_cpp
 regressions/ck_epoch/validate/ck_epoch_poll
+regressions/ck_epoch/validate/ck_epoch_poll_cpp
 regressions/ck_epoch/validate/ck_epoch_synchronize
+regressions/ck_epoch/validate/ck_epoch_synchronize_cpp
 regressions/ck_epoch/validate/ck_stack
-regressions/ck_epoch/validate/ck_stack_read
+regressions/ck_epoch/validate/ck_stack_cpp
 regressions/ck_fifo/benchmark/latency
 regressions/ck_fifo/validate/ck_fifo_mpmc
 regressions/ck_fifo/validate/ck_fifo_mpmc_iterator

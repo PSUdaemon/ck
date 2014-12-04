@@ -80,6 +80,10 @@ struct ck_epoch {
 };
 typedef struct ck_epoch ck_epoch_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * Marks the beginning of an epoch-protected section.
  */
@@ -158,5 +162,9 @@ bool ck_epoch_poll(ck_epoch_t *, ck_epoch_record_t *);
 void ck_epoch_synchronize(ck_epoch_t *, ck_epoch_record_t *);
 void ck_epoch_barrier(ck_epoch_t *, ck_epoch_record_t *);
 void ck_epoch_reclaim(ck_epoch_record_t *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _CK_EPOCH_H */

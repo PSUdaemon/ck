@@ -161,14 +161,14 @@ write_thread(void *unused CK_CC_UNUSED)
 	ck_pr_inc_uint(&barrier);
 	while (ck_pr_load_uint(&barrier) < n_threads);
 
-	entry = malloc(sizeof(struct node *) * PAIRS_S);
+	entry = (struct node **)malloc(sizeof(struct node *) * PAIRS_S);
 	if (entry == NULL) {
 		ck_error("Failed allocation.\n");
 	}
 
 	for (j = 0; j < ITERATE_S; j++) {
 		for (i = 0; i < PAIRS_S; i++) {
-			entry[i] = malloc(sizeof(struct node));
+			entry[i] = (struct node *)malloc(sizeof(struct node));
 			if (entry == NULL) {
 				ck_error("Failed individual allocation\n");
 			}
@@ -241,7 +241,7 @@ main(int argc, char *argv[])
 	a.delta = atoi(argv[3]);
 	a.request = 0;
 
-	threads = malloc(sizeof(pthread_t) * n_threads);
+	threads = (pthread_t *)malloc(sizeof(pthread_t) * n_threads);
 	ck_epoch_init(&stack_epoch);
 
 	for (i = 0; i < n_rd; i++)

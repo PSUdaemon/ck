@@ -1,6 +1,7 @@
 .PHONY: check clean distribution
 
-OBJECTS=ck_stack ck_epoch_synchronize ck_epoch_poll ck_epoch_call
+FILES=$(shell find . -name "*.c")
+OBJECTS=$(FILES:.c=) $(FILES:.c=_cpp)
 HALF=`expr $(CORES) / 2`
 
 all: $(OBJECTS)
@@ -9,21 +10,21 @@ check: all
 	./ck_stack $(CORES) 1
 	./ck_epoch_synchronize $(HALF) $(HALF) 1
 	./ck_epoch_poll $(CORES) 1 1
+	./ck_epoch_call
+	./ck_stack_cpp $(CORES) 1
+	./ck_epoch_synchronize_cpp $(HALF) $(HALF) 1
+	./ck_epoch_poll_cpp $(CORES) 1 1
+	./ck_epoch_call_cpp
 
-ck_epoch_synchronize: ck_epoch_synchronize.c ../../../include/ck_stack.h ../../../include/ck_epoch.h ../../../src/ck_epoch.c
-	$(CC) $(CFLAGS) -o ck_epoch_synchronize ck_epoch_synchronize.c ../../../src/ck_epoch.c
+%: %.c
+	$(CC) $(CFLAGS) $< -o $@ ../../../src/libck.a
 
-ck_epoch_poll: ck_epoch_poll.c ../../../include/ck_stack.h ../../../include/ck_epoch.h ../../../src/ck_epoch.c
-	$(CC) $(CFLAGS) -o ck_epoch_poll ck_epoch_poll.c ../../../src/ck_epoch.c
-
-ck_epoch_call: ck_epoch_call.c ../../../include/ck_stack.h ../../../include/ck_epoch.h ../../../src/ck_epoch.c
-	$(CC) $(CFLAGS) -o ck_epoch_call ck_epoch_call.c ../../../src/ck_epoch.c
-
-ck_stack: ck_stack.c ../../../include/ck_stack.h ../../../include/ck_epoch.h ../../../src/ck_epoch.c
-	$(CC) $(CFLAGS) -o ck_stack ck_stack.c ../../../src/ck_epoch.c
+%_cpp: %.c
+	$(CXX) $(CXXFLAGS) $< -o $@ ../../../src/libck.a
 
 clean:
 	rm -rf *~ *.o $(OBJECTS) *.dSYM *.exe
 
 include ../../../build/regressions.build
 CFLAGS+=$(PTHREAD_CFLAGS) -D_GNU_SOURCE
+CXXFLAGS+=$(PTHREAD_CXXFLAGS) -D_GNU_SOURCE
