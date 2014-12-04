@@ -22,6 +22,7 @@ ID
 regressions/ck_array/validate/serial
 regressions/ck_array/validate/serial_cpp
 regressions/ck_backoff/validate/validate
+regressions/ck_backoff/validate/validate_cpp
 regressions/ck_bag/validate/order
 regressions/ck_barrier/benchmark/throughput
 regressions/ck_barrier/validate/barrier_centralized

@@ -1,15 +1,25 @@
-.PHONY: check clean
+.PHONY: check clean distribution
 
-all: validate
+FILES=$(shell find . -name "*.c")
+OBJECTS=$(FILES:.c=) $(FILES:.c=_cpp)
 
-validate: validate.c ../../../include/ck_backoff.h
-	$(CC) $(CFLAGS) -o validate validate.c
+all: $(OBJECTS)
+
+%: %.c
+	$(CC) $(CFLAGS) $< -o $@ ../../../src/libck.a
+
+%_cpp: %.c
+	$(CXX) $(CXXFLAGS) $< -o $@ ../../../src/libck.a
 
 check: all
-	./validate
+	for d in $(OBJECTS) ; do        \
+		echo $$d;		\
+		./$$d || exit 1;     	\
+	done;
 
 clean:
-	rm -rf validate *.dSYM *.exe
+	rm -rf *~ *.o $(OBJECTS) *.dSYM *.exe
 
 include ../../../build/regressions.build
 CFLAGS+=-D_GNU_SOURCE
+CXXFLAGS+=-D_GNU_SOURCE
