@@ -28,4 +28,4 @@ clean:
 
 include ../../../build/regressions.build
 CFLAGS+=$(PTHREAD_CFLAGS) -D_GNU_SOURCE
-CXXFLAGS+=$(PTHREAD_CFLAGS) -D_GNU_SOURCE
+CXXFLAGS+=$(PTHREAD_CXXFLAGS) -D_GNU_SOURCE
