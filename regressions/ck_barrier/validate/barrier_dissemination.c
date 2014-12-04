@@ -57,7 +57,7 @@ static int barrier_wait;
 static void *
 thread(void *b)
 {
-	ck_barrier_dissemination_t *barrier = b;
+	ck_barrier_dissemination_t *barrier = (ck_barrier_dissemination_t *)b;
 	ck_barrier_dissemination_state_t state;
 	int j, k, counter;
 	int i = 0;
@@ -99,26 +99,26 @@ main(int argc, char *argv[])
 		ck_error("ERROR: Number of threads must be greater than 0\n");
 	}
 
-	threads = malloc(sizeof(pthread_t) * nthr);
+	threads = (pthread_t *)malloc(sizeof(pthread_t) * nthr);
 	if (threads == NULL) {
 		ck_error("ERROR: Could not allocate thread structures\n");
 	}
 
 	a.delta = atoi(argv[2]);
 
-	barrier = malloc(sizeof(ck_barrier_dissemination_t) * nthr);
+	barrier = (ck_barrier_dissemination_t *)malloc(sizeof(ck_barrier_dissemination_t) * nthr);
 	if (barrier == NULL) {
 		ck_error("ERROR: Could not allocate barrier structures\n");
 	}
 
-	barrier_internal = malloc(sizeof(ck_barrier_dissemination_flag_t *) * nthr);
+	barrier_internal = (ck_barrier_dissemination_flag_t **)malloc(sizeof(ck_barrier_dissemination_flag_t *) * nthr);
 	if (barrier_internal == NULL) {
 		ck_error("ERROR: Could not allocate barrier structures\n");
 	}
 
 	size = ck_barrier_dissemination_size(nthr);
 	for (i = 0; i < nthr; ++i) {
-		barrier_internal[i] = malloc(sizeof(ck_barrier_dissemination_flag_t) * size);
+		barrier_internal[i] = (ck_barrier_dissemination_flag_t *)malloc(sizeof(ck_barrier_dissemination_flag_t) * size);
 		if (barrier_internal[i] == NULL) {
 			ck_error("ERROR: Could not allocate barrier structures\n");
 		}

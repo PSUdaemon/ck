@@ -72,7 +72,7 @@ thread(void *group)
 	for (j = 0; j < ITERATE; j++) {
 		i = j++ & (ENTRIES - 1);
 		ck_pr_inc_int(&counters[i]);
-		ck_barrier_combining(&barrier, group, &state);
+		ck_barrier_combining(&barrier, (ck_barrier_combining_group_t *)group, &state);
 		counter = ck_pr_load_int(&counters[i]);
 		if (counter != nthr * ngroups * (j / ENTRIES + 1)) {
 			ck_error("FAILED [%d:%d]: %d != %d\n", i, j - 1, counter, nthr * ngroups);
@@ -90,7 +90,7 @@ main(int argc, char *argv[])
 	ck_barrier_combining_group_t *init_root;
 	int i;
 
-	init_root = malloc(sizeof(ck_barrier_combining_group_t));
+	init_root = (ck_barrier_combining_group_t *)malloc(sizeof(ck_barrier_combining_group_t));
 	if (init_root == NULL) {
 		ck_error("ERROR: Could not allocate initial barrier structure\n");
 	}
@@ -110,12 +110,12 @@ main(int argc, char *argv[])
 		ck_error("ERROR: Number of threads must be greater than 0\n");
 	}
 
-	groupings = malloc(sizeof(ck_barrier_combining_group_t) * ngroups);
+	groupings = (ck_barrier_combining_group_t *)malloc(sizeof(ck_barrier_combining_group_t) * ngroups);
 	if (groupings == NULL) {
 		ck_error("Could not allocate thread barrier grouping structures\n");
 	}
 
-	threads = malloc(sizeof(pthread_t) * nthr * ngroups);
+	threads = (pthread_t *)malloc(sizeof(pthread_t) * nthr * ngroups);
 	if (threads == NULL) {
 		ck_error("ERROR: Could not allocate thread structures\n");
 	}

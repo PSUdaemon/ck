@@ -57,7 +57,7 @@ static int barrier_wait;
 static void *
 thread(void *b)
 {
-	ck_barrier_mcs_t *barrier = b;
+	ck_barrier_mcs_t *barrier = (ck_barrier_mcs_t *)b;
 	ck_barrier_mcs_state_t state;
 	int j, counter;
 	int i = 0;
@@ -99,12 +99,12 @@ main(int argc, char *argv[])
 		ck_error("ERROR: Number of threads must be greater than 0\n");
 	}
 
-	threads = malloc(sizeof(pthread_t) * nthr);
+	threads = (pthread_t *)malloc(sizeof(pthread_t) * nthr);
 	if (threads == NULL) {
 		ck_error("ERROR: Could not allocate thread structures\n");
 	}
 
-	barrier = malloc(sizeof(ck_barrier_mcs_t) * nthr);
+	barrier = (ck_barrier_mcs_t *)malloc(sizeof(ck_barrier_mcs_t) * nthr);
 	if (barrier == NULL) {
 		ck_error("ERROR: Could not allocate barrier structures\n");
 	}

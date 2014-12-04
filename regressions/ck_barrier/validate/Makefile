@@ -1,34 +1,25 @@
 .PHONY: check clean distribution
 
-OBJECTS=barrier_centralized barrier_combining barrier_dissemination barrier_tournament barrier_mcs
+FILES=$(shell find . -name "*.c")
+OBJECTS=$(FILES:.c=) $(FILES:.c=_cpp)
 
 all: $(OBJECTS)
 
-barrier_centralized: barrier_centralized.c ../../../include/ck_barrier.h ../../../src/ck_barrier_centralized.c
-	$(CC) $(CFLAGS) -o barrier_centralized barrier_centralized.c ../../../src/ck_barrier_centralized.c
+%: %.c
+	$(CC) $(CFLAGS) $< -o $@ ../../../src/libck.a
 
-barrier_combining: barrier_combining.c ../../../include/ck_barrier.h ../../../src/ck_barrier_combining.c
-	$(CC) $(CFLAGS) -o barrier_combining barrier_combining.c ../../../src/ck_barrier_combining.c
-
-barrier_dissemination: barrier_dissemination.c ../../../include/ck_barrier.h ../../../src/ck_barrier_dissemination.c
-	$(CC) $(CFLAGS) -o barrier_dissemination barrier_dissemination.c ../../../src/ck_barrier_dissemination.c
-
-barrier_tournament: barrier_tournament.c ../../../include/ck_barrier.h ../../../src/ck_barrier_tournament.c
-	$(CC) $(CFLAGS) -o barrier_tournament barrier_tournament.c ../../../src/ck_barrier_tournament.c
-
-barrier_mcs: barrier_mcs.c ../../../include/ck_barrier.h ../../../src/ck_barrier_mcs.c
-	$(CC) $(CFLAGS) -o barrier_mcs barrier_mcs.c ../../../src/ck_barrier_mcs.c
+%_cpp: %.c
+	$(CXX) $(CXXFLAGS) $< -o $@ ../../../src/libck.a
 
 check: all
-	rc=0;                                                   \
-	for d in $(OBJECTS) ; do                                \
-		echo $$d;					\
-		./$$d $(CORES) 1 1 || rc=1;     		\
-	done;                                                   \
-	exit $$rc
+	for d in $(OBJECTS) ; do        	\
+		echo $$d;			\
+		./$$d $(CORES) 1 1 || exit 1;   \
+	done;
 
 clean:
-	rm -rf *.dSYM *.exe *~ *.o $(OBJECTS)
+	rm -rf *~ *.o $(OBJECTS) *.dSYM *.exe
 
 include ../../../build/regressions.build
 CFLAGS+=$(PTHREAD_CFLAGS) -D_GNU_SOURCE
+CXXFLAGS+=$(PTHREAD_CXXFLAGS) -D_GNU_SOURCE

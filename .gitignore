@@ -26,10 +26,15 @@ regressions/ck_backoff/validate/validate_cpp
 regressions/ck_bag/validate/order
 regressions/ck_barrier/benchmark/throughput
 regressions/ck_barrier/validate/barrier_centralized
+regressions/ck_barrier/validate/barrier_centralized_cpp
 regressions/ck_barrier/validate/barrier_combining
+regressions/ck_barrier/validate/barrier_combining_cpp
 regressions/ck_barrier/validate/barrier_dissemination
+regressions/ck_barrier/validate/barrier_dissemination_cpp
 regressions/ck_barrier/validate/barrier_mcs
+regressions/ck_barrier/validate/barrier_mcs_cpp
 regressions/ck_barrier/validate/barrier_tournament
+regressions/ck_barrier/validate/barrier_tournament_cpp
 regressions/ck_bitmap/validate/serial
 regressions/ck_bitmap/validate/serial_cpp
 regressions/ck_brlock/benchmark/latency

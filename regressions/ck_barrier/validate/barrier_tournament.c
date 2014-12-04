@@ -104,19 +104,19 @@ main(int argc, char *argv[])
 	}
 	a.delta = atoi(argv[2]);
 
-	threads = malloc(sizeof(pthread_t) * nthr);
+	threads = (pthread_t *)malloc(sizeof(pthread_t) * nthr);
 	if (threads == NULL) {
 		ck_error("ERROR: Could not allocate thread structures\n");
 	}
 
-	rounds = malloc(sizeof(ck_barrier_tournament_round_t *) * nthr);
+	rounds = (ck_barrier_tournament_round_t **)malloc(sizeof(ck_barrier_tournament_round_t *) * nthr);
 	if (rounds == NULL) {
 		ck_error("ERROR: Could not allocate barrier structures\n");
 	}
 
 	size = ck_barrier_tournament_size(nthr);
 	for (i = 0; i < nthr; ++i) {
-		rounds[i] = malloc(sizeof(ck_barrier_tournament_round_t) * size);
+		rounds[i] = (ck_barrier_tournament_round_t *)malloc(sizeof(ck_barrier_tournament_round_t) * size);
 		if (rounds[i] == NULL) {
 			ck_error("ERROR: Could not allocate barrier structures\n");
 		}

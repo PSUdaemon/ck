@@ -31,7 +31,7 @@
 #include <stdbool.h>
 
 void
-ck_barrier_mcs_init(struct ck_barrier_mcs *barrier, unsigned int nthr)
+ck_barrier_mcs_init(struct _ck_barrier_mcs *barrier, unsigned int nthr)
 {
 	unsigned int i, j;
 
@@ -73,7 +73,7 @@ ck_barrier_mcs_init(struct ck_barrier_mcs *barrier, unsigned int nthr)
 }
 
 void
-ck_barrier_mcs_subscribe(struct ck_barrier_mcs *barrier, struct ck_barrier_mcs_state *state)
+ck_barrier_mcs_subscribe(struct _ck_barrier_mcs *barrier, struct ck_barrier_mcs_state *state)
 {
 
 	state->sense = ~0;
@@ -98,7 +98,7 @@ ck_barrier_mcs_check_children(unsigned int *childnotready)
 }
 
 CK_CC_INLINE static void
-ck_barrier_mcs_reinitialize_children(struct ck_barrier_mcs *node)
+ck_barrier_mcs_reinitialize_children(struct _ck_barrier_mcs *node)
 {
 
 	ck_pr_store_uint(&node->childnotready[0], node->havechild[0]);
@@ -109,7 +109,7 @@ ck_barrier_mcs_reinitialize_children(struct ck_barrier_mcs *node)
 }
 
 void
-ck_barrier_mcs(struct ck_barrier_mcs *barrier,
+ck_barrier_mcs(struct _ck_barrier_mcs *barrier,
     struct ck_barrier_mcs_state *state)
 {
 

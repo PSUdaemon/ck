@@ -29,7 +29,7 @@
 #include <ck_pr.h>
 
 void
-ck_barrier_centralized(struct ck_barrier_centralized *barrier,
+ck_barrier_centralized(struct _ck_barrier_centralized *barrier,
     struct ck_barrier_centralized_state *state,
     unsigned int n_threads)
 {
