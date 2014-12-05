@@ -59,9 +59,13 @@ regressions/ck_epoch/validate/ck_stack
 regressions/ck_epoch/validate/ck_stack_cpp
 regressions/ck_fifo/benchmark/latency
 regressions/ck_fifo/validate/ck_fifo_mpmc
+regressions/ck_fifo/validate/ck_fifo_mpmc_cpp
 regressions/ck_fifo/validate/ck_fifo_mpmc_iterator
+regressions/ck_fifo/validate/ck_fifo_mpmc_iterator_cpp
 regressions/ck_fifo/validate/ck_fifo_spsc
+regressions/ck_fifo/validate/ck_fifo_spsc_cpp
 regressions/ck_fifo/validate/ck_fifo_spsc_iterator
+regressions/ck_fifo/validate/ck_fifo_spsc_iterator_cpp
 regressions/ck_hp/benchmark/fifo_latency
 regressions/ck_hp/benchmark/stack_latency
 regressions/ck_hp/validate/ck_hp_fifo

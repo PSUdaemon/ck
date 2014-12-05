@@ -62,7 +62,7 @@ static void *
 test(void *c)
 {
 #ifdef CK_F_FIFO_MPMC
-	struct context *context = c;
+	struct context *context = (struct context *)c;
 	struct entry *entry;
 	ck_fifo_mpmc_entry_t *fifo_entry, *garbage;
 	int i, j;
@@ -77,8 +77,8 @@ test(void *c)
 
 	for (i = 0; i < ITERATIONS; i++) {
 		for (j = 0; j < size; j++) {
-			fifo_entry = malloc(sizeof(ck_fifo_mpmc_entry_t));
-			entry = malloc(sizeof(struct entry));
+			fifo_entry = (ck_fifo_mpmc_entry_t *)malloc(sizeof(ck_fifo_mpmc_entry_t));
+			entry = (struct entry *)malloc(sizeof(struct entry));
 			entry->tid = context->tid;
 			ck_fifo_mpmc_enqueue(&fifo, fifo_entry, entry);
 			if (ck_fifo_mpmc_dequeue(&fifo, &entry, &garbage) == false) {
@@ -93,8 +93,8 @@ test(void *c)
 
 	for (i = 0; i < ITERATIONS; i++) {
 		for (j = 0; j < size; j++) {
-			fifo_entry = malloc(sizeof(ck_fifo_mpmc_entry_t));
-			entry = malloc(sizeof(struct entry));
+			fifo_entry = (ck_fifo_mpmc_entry_t *)malloc(sizeof(ck_fifo_mpmc_entry_t));
+			entry = (struct entry *)malloc(sizeof(struct entry));
 			entry->tid = context->tid;
 			while (ck_fifo_mpmc_tryenqueue(&fifo, fifo_entry, entry) == false)
 				ck_pr_stall();
@@ -133,18 +133,18 @@ main(int argc, char *argv[])
 	size = atoi(argv[3]);
 	assert(size > 0);
 
-	context = malloc(sizeof(*context) * nthr);
+	context = (struct context *)malloc(sizeof(*context) * nthr);
 	assert(context);
 
-	thread = malloc(sizeof(pthread_t) * nthr);
+	thread = (pthread_t *)malloc(sizeof(pthread_t) * nthr);
 	assert(thread);
 
-	ck_fifo_mpmc_init(&fifo, malloc(sizeof(ck_fifo_mpmc_entry_t)));
+	ck_fifo_mpmc_init(&fifo, (ck_fifo_mpmc_entry_t *)malloc(sizeof(ck_fifo_mpmc_entry_t)));
 	ck_fifo_mpmc_deinit(&fifo, &garbage);
 	if (garbage == NULL)
 		ck_error("ERROR: Expected non-NULL stub node on deinit.\n");
 	free(garbage);
-	ck_fifo_mpmc_init(&fifo, malloc(sizeof(ck_fifo_mpmc_entry_t)));
+	ck_fifo_mpmc_init(&fifo, (ck_fifo_mpmc_entry_t *)malloc(sizeof(ck_fifo_mpmc_entry_t)));
 
 	for (i = 0; i < nthr; i++) {
 		context[i].tid = i;

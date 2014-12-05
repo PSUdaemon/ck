@@ -57,7 +57,7 @@ static unsigned int barrier;
 static void *
 test(void *c)
 {
-	struct context *context = c;
+	struct context *context = (struct context *)c;
 	struct entry *entry;
 	ck_fifo_spsc_entry_t *fifo_entry;
 	int i, j;
@@ -74,14 +74,14 @@ test(void *c)
 	if (context->tid == 0) {
 		struct entry *entries;
 
-		entries = malloc(sizeof(struct entry) * size);
+		entries = (struct entry *)malloc(sizeof(struct entry) * size);
 		assert(entries != NULL);
 
 		for (i = 0; i < size; i++) {
 			entries[i].value = i;
 			entries[i].tid = 0;
 
-			fifo_entry = malloc(sizeof(ck_fifo_spsc_entry_t));
+			fifo_entry = (ck_fifo_spsc_entry_t *)malloc(sizeof(ck_fifo_spsc_entry_t));
 			ck_fifo_spsc_enqueue(fifo + context->tid, fifo_entry, entries + i);
 		}
 	}
@@ -105,7 +105,7 @@ test(void *c)
 			entry->tid = context->tid;
 			fifo_entry = ck_fifo_spsc_recycle(fifo + context->tid);
 			if (fifo_entry == NULL)
-				fifo_entry = malloc(sizeof(ck_fifo_spsc_entry_t));
+				fifo_entry = (ck_fifo_spsc_entry_t *)malloc(sizeof(ck_fifo_spsc_entry_t));
 
 			ck_fifo_spsc_enqueue(fifo + context->tid, fifo_entry, entry);
 		}
@@ -134,13 +134,13 @@ main(int argc, char *argv[])
 	size = atoi(argv[3]);
 	assert(size > 0);
 
-	fifo = malloc(sizeof(ck_fifo_spsc_t) * nthr);
+	fifo = (ck_fifo_spsc_t *)malloc(sizeof(ck_fifo_spsc_t) * nthr);
 	assert(fifo);
 
-	context = malloc(sizeof(*context) * nthr);
+	context = (struct context *)malloc(sizeof(*context) * nthr);
 	assert(context);
 
-	thread = malloc(sizeof(pthread_t) * nthr);
+	thread = (pthread_t *)malloc(sizeof(pthread_t) * nthr);
 	assert(thread);
 
 	for (i = 0; i < nthr; i++) {
@@ -158,13 +158,13 @@ main(int argc, char *argv[])
 			context[i].previous = i - 1;
 		}
 
-		ck_fifo_spsc_init(fifo + i, malloc(sizeof(ck_fifo_spsc_entry_t)));
+		ck_fifo_spsc_init(fifo + i, (ck_fifo_spsc_entry_t *)malloc(sizeof(ck_fifo_spsc_entry_t)));
 		ck_fifo_spsc_deinit(fifo + i, &garbage);
 		if (garbage == NULL)
 			ck_error("ERROR: Expected non-NULL stub node on deinit.\n");
 
 		free(garbage);
-		ck_fifo_spsc_init(fifo + i, malloc(sizeof(ck_fifo_spsc_entry_t)));
+		ck_fifo_spsc_init(fifo + i, (ck_fifo_spsc_entry_t *)malloc(sizeof(ck_fifo_spsc_entry_t)));
 		r = pthread_create(thread + i, NULL, test, context + i);
 		assert(r == 0);
 	}

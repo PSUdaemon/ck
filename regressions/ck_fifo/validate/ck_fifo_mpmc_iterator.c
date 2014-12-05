@@ -43,17 +43,17 @@ main(void)
 	struct example *examples;
 	ck_fifo_mpmc_entry_t *stub, *entries, *entry, *next;
 
-	stub = malloc(sizeof(ck_fifo_mpmc_entry_t));
+	stub = (ck_fifo_mpmc_entry_t *)malloc(sizeof(ck_fifo_mpmc_entry_t));
 	if (stub == NULL)
 		exit(EXIT_FAILURE);
 
 	ck_fifo_mpmc_init(&mpmc_fifo, stub);
 
-	entries = malloc(sizeof(ck_fifo_mpmc_entry_t) * length);
+	entries = (ck_fifo_mpmc_entry_t *)malloc(sizeof(ck_fifo_mpmc_entry_t) * length);
 	if (entries == NULL)
 		exit(EXIT_FAILURE);
 
-	examples = malloc(sizeof(struct example) * length);
+	examples = (struct example *)malloc(sizeof(struct example) * length);
 	/* Need these for this unit test. */
 	if (examples == NULL)
 		exit(EXIT_FAILURE);
