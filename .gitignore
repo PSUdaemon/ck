@@ -96,6 +96,7 @@ regressions/ck_ht/validate/serial.delete_cpp
 regressions/ck_pflock/benchmark/latency
 regressions/ck_pflock/benchmark/throughput
 regressions/ck_pflock/validate/validate
+regressions/ck_pflock/validate/validate_cpp
 regressions/ck_pr/benchmark/ck_pr_cas_64
 regressions/ck_pr/benchmark/ck_pr_cas_64_2
 regressions/ck_pr/benchmark/ck_pr_fas_64

@@ -1,17 +1,25 @@
 .PHONY: check clean distribution
 
-OBJECTS=validate
+FILES=$(shell find . -name "*.c")
+OBJECTS=$(FILES:.c=) $(FILES:.c=_cpp)
 
 all: $(OBJECTS)
 
-validate: validate.c ../../../include/ck_pflock.h
-	$(CC) $(CFLAGS) -o validate validate.c
+%: %.c
+	$(CC) $(CFLAGS) $< -o $@ ../../../src/libck.a
+
+%_cpp: %.c
+	$(CXX) $(CXXFLAGS) $< -o $@ ../../../src/libck.a
 
 check: all
-	./validate $(CORES) 1
+	for d in $(OBJECTS) ; do        	\
+		echo $$d $(CORES) 1;		\
+		./$$d $(CORES) 1 || exit 1;	\
+	done;
 
 clean:
-	rm -rf *.dSYM *.exe *~ *.o $(OBJECTS)
+	rm -rf *~ *.o $(OBJECTS) *.dSYM *.exe
 
 include ../../../build/regressions.build
 CFLAGS+=$(PTHREAD_CFLAGS) -D_GNU_SOURCE
+CXXFLAGS+=$(PTHREAD_CXXFLAGS) -D_GNU_SOURCE
