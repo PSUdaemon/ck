@@ -282,7 +282,7 @@ ck_rhs_next(struct ck_rhs *hs, struct ck_rhs_iterator *i, void **key)
 }
 
 void
-ck_rhs_stat(struct ck_rhs *hs, struct ck_rhs_stat *st)
+ck_rhs_stat(struct ck_rhs *hs, struct ck_rhs_stats *st)
 {
 	struct ck_rhs_map *map = hs->map;
 

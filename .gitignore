@@ -146,6 +146,7 @@ regressions/ck_queue/validate/ck_stailq
 regressions/ck_rhs/benchmark/parallel_bytestring
 regressions/ck_rhs/benchmark/serial
 regressions/ck_rhs/validate/serial
+regressions/ck_rhs/validate/serial_cpp
 regressions/ck_ring/benchmark/latency
 regressions/ck_ring/validate/ck_ring_spmc
 regressions/ck_ring/validate/ck_ring_spmc_template

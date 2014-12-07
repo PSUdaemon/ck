@@ -90,7 +90,7 @@ struct ck_rhs {
 };
 typedef struct ck_rhs ck_rhs_t;
 
-struct ck_rhs_stat {
+struct ck_rhs_stats {
 	unsigned long n_entries;
 	unsigned int probe_maximum;
 };
@@ -105,6 +105,10 @@ typedef struct ck_rhs_iterator ck_rhs_iterator_t;
 
 /* Convenience wrapper to table hash function. */
 #define CK_RHS_HASH(T, F, K) F((K), (T)->seed)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef void *ck_rhs_apply_fn_t(void *, void *);
 bool ck_rhs_apply(ck_rhs_t *, unsigned long, const void *, ck_rhs_apply_fn_t *, void *);
@@ -127,6 +131,10 @@ bool ck_rhs_gc(ck_rhs_t *);
 unsigned long ck_rhs_count(ck_rhs_t *);
 bool ck_rhs_reset(ck_rhs_t *);
 bool ck_rhs_reset_size(ck_rhs_t *, unsigned long);
-void ck_rhs_stat(ck_rhs_t *, struct ck_rhs_stat *);
+void ck_rhs_stat(ck_rhs_t *, struct ck_rhs_stats *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _CK_RHS_H */

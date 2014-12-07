@@ -222,7 +222,7 @@ run_test(const char *file, size_t r, unsigned int size, unsigned int mode)
 	size_t i, j;
 	unsigned int d = 0;
 	uint64_t s, e, a, ri, si, ai, sr, rg, sg, ag, sd, ng, ss, sts, su, sgc, sb;
-	struct ck_rhs_stat st;
+	struct ck_rhs_stats st;
 	char **t;
 
 	keys = malloc(sizeof(char *) * keys_capacity);
