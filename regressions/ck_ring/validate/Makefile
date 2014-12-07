@@ -1,28 +1,26 @@
 .PHONY: check clean distribution
 
-OBJECTS=ck_ring_spsc ck_ring_spmc ck_ring_spmc_template
-SIZE=16384
+FILES=$(shell find . -name "*.c")
+OBJECTS=$(FILES:.c=) $(FILES:.c=_cpp)
 
 all: $(OBJECTS)
 
+%: %.c
+	$(CC) $(CFLAGS) $< -o $@ ../../../src/libck.a
+
+%_cpp: %.c
+	$(CXX) $(CXXFLAGS) $< -o $@ ../../../src/libck.a
+
 check: all
-	./ck_ring_spsc $(CORES) 1 $(SIZE)
-	./ck_ring_spmc $(CORES) 1 $(SIZE)
-
-ck_ring_spsc: ck_ring_spsc.c ../../../include/ck_ring.h
-	$(CC) $(CFLAGS) -o ck_ring_spsc ck_ring_spsc.c \
-		../../../src/ck_barrier_centralized.c
-
-ck_ring_spmc: ck_ring_spmc.c ../../../include/ck_ring.h
-	$(CC) $(CFLAGS) -o ck_ring_spmc ck_ring_spmc.c \
-		../../../src/ck_barrier_centralized.c
-
-ck_ring_spmc_template: ck_ring_spmc_template.c ../../../include/ck_ring.h
-	$(CC) $(CFLAGS) -o ck_ring_spmc_template ck_ring_spmc_template.c \
-		../../../src/ck_barrier_centralized.c
+	for d in $(OBJECTS) ; do			\
+		echo $$d $(CORES) 1 $(SIZE);		\
+		./$$d $(CORES) 1 $(SIZE) || exit 1;	\
+	done;
 
 clean:
 	rm -rf *~ *.o $(OBJECTS) *.dSYM *.exe
 
 include ../../../build/regressions.build
+SIZE=16384
 CFLAGS+=$(PTHREAD_CFLAGS) -D_GNU_SOURCE
+CXXFLAGS+=$(PTHREAD_CXXFLAGS) -D_GNU_SOURCE

@@ -59,7 +59,7 @@ static struct context *_context;
 static void *
 test(void *c)
 {
-	struct context *context = c;
+	struct context *context = (struct context *)c;
 	struct entry *entry;
 	unsigned int s;
 	int i, j;
@@ -73,11 +73,11 @@ test(void *c)
                 exit(EXIT_FAILURE);
         }
 
-	buffer = context->buffer;
+	buffer = (ck_ring_buffer_t *)context->buffer;
 	if (context->tid == 0) {
 		struct entry *entries;
 
-		entries = malloc(sizeof(struct entry) * size);
+		entries = (struct entry *)malloc(sizeof(struct entry) * size);
 		assert(entries != NULL);
 
 		if (ck_ring_size(ring) != 0) {
@@ -120,7 +120,7 @@ test(void *c)
 
 	for (i = 0; i < ITERATIONS; i++) {
 		for (j = 0; j < size; j++) {
-			buffer = _context[context->previous].buffer;
+			buffer = (ck_ring_buffer_t *)_context[context->previous].buffer;
 			while (ck_ring_dequeue_spsc(ring + context->previous,
 			    buffer, &entry) == false);
 
@@ -135,7 +135,7 @@ test(void *c)
 			}
 
 			entry->tid = context->tid;
-			buffer = context->buffer;
+			buffer = (ck_ring_buffer_t *)context->buffer;
 			if (i & 1) {
 				r = ck_ring_enqueue_spsc(ring + context->tid,
 					buffer, entry);
@@ -176,13 +176,13 @@ main(int argc, char *argv[])
 	assert(size >= 4 && (size & size - 1) == 0);
 	size -= 1;
 
-	ring = malloc(sizeof(ck_ring_t) * nthr);
+	ring = (ck_ring_t *)malloc(sizeof(ck_ring_t) * nthr);
 	assert(ring);
 
-	_context = malloc(sizeof(*_context) * nthr);
+	_context = (struct context *)malloc(sizeof(*_context) * nthr);
 	assert(_context);
 
-	thread = malloc(sizeof(pthread_t) * nthr);
+	thread = (pthread_t *)malloc(sizeof(pthread_t) * nthr);
 	assert(thread);
 
 	for (i = 0; i < nthr; i++) {
@@ -198,7 +198,7 @@ main(int argc, char *argv[])
 			_context[i].previous = i - 1;
 		}
 
-		buffer = malloc(sizeof(ck_ring_buffer_t) * (size + 1));
+		buffer = (ck_ring_buffer_t *)malloc(sizeof(ck_ring_buffer_t) * (size + 1));
 		assert(buffer);
 		_context[i].buffer = buffer;
 		ck_ring_init(ring + i, size + 1);

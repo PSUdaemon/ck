@@ -149,8 +149,11 @@ regressions/ck_rhs/validate/serial
 regressions/ck_rhs/validate/serial_cpp
 regressions/ck_ring/benchmark/latency
 regressions/ck_ring/validate/ck_ring_spmc
+regressions/ck_ring/validate/ck_ring_spmc_cpp
 regressions/ck_ring/validate/ck_ring_spmc_template
+regressions/ck_ring/validate/ck_ring_spmc_template_cpp
 regressions/ck_ring/validate/ck_ring_spsc
+regressions/ck_ring/validate/ck_ring_spsc_cpp
 regressions/ck_ring/validate/ck_ring_spsc_template
 regressions/ck_rwcohort/benchmark/ck_neutral.LATENCY
 regressions/ck_rwcohort/benchmark/ck_neutral.THROUGHPUT

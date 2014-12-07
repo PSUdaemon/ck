@@ -70,7 +70,7 @@ test_spmc(void *c)
 	unsigned long previous = 0;
 	unsigned int seed;
 	int i, k, j, tid;
-	struct context *context = c;
+	struct context *context = (struct context *)c;
 	ck_ring_buffer_t *buffer;
 
 	buffer = context->buffer;
@@ -133,7 +133,7 @@ test_spmc(void *c)
 static void *
 test(void *c)
 {
-	struct context *context = c;
+	struct context *context = (struct context *)c;
 	struct entry *entry;
 	unsigned int s;
 	int i, j;
@@ -150,7 +150,7 @@ test(void *c)
 	if (context->tid == 0) {
 		struct entry *entries;
 
-		entries = malloc(sizeof(struct entry) * size);
+		entries = (struct entry *)malloc(sizeof(struct entry) * size);
 		assert(entries != NULL);
 
 		if (ck_ring_size(ring) != 0) {
@@ -254,13 +254,13 @@ main(int argc, char *argv[])
 	assert(size >= 4 && (size & size - 1) == 0);
 	size -= 1;
 
-	ring = malloc(sizeof(ck_ring_t) * nthr);
+	ring = (ck_ring_t *)malloc(sizeof(ck_ring_t) * nthr);
 	assert(ring);
 
-	_context = malloc(sizeof(*_context) * nthr);
+	_context = (struct context *)malloc(sizeof(*_context) * nthr);
 	assert(_context);
 
-	thread = malloc(sizeof(pthread_t) * nthr);
+	thread = (pthread_t *)malloc(sizeof(pthread_t) * nthr);
 	assert(thread);
 
 	fprintf(stderr, "SPSC test:");
@@ -277,7 +277,7 @@ main(int argc, char *argv[])
 			_context[i].previous = i - 1;
 		}
 
-		buffer = malloc(sizeof(ck_ring_buffer_t) * (size + 1));
+		buffer = (ck_ring_buffer_t *)malloc(sizeof(ck_ring_buffer_t) * (size + 1));
 		assert(buffer);
 		memset(buffer, 0, sizeof(ck_ring_buffer_t) * (size + 1));
 		_context[i].buffer = buffer;
@@ -292,7 +292,7 @@ main(int argc, char *argv[])
 	fprintf(stderr, " done\n");
 
 	fprintf(stderr, "SPMC test:\n");
-	buffer = malloc(sizeof(ck_ring_buffer_t) * (size + 1));
+	buffer = (ck_ring_buffer_t *)malloc(sizeof(ck_ring_buffer_t) * (size + 1));
 	assert(buffer);
 	memset(buffer, 0, sizeof(void *) * (size + 1));
 	ck_ring_init(&ring_spmc, size + 1);
@@ -303,7 +303,7 @@ main(int argc, char *argv[])
 	}
 
 	for (l = 0; l < (unsigned long)size * ITERATIONS * (nthr - 1) ; l++) {
-		struct entry *entry = malloc(sizeof *entry);
+		struct entry *entry = (struct entry *)malloc(sizeof *entry);
 
 		assert(entry != NULL);
 		entry->value_long = l;
