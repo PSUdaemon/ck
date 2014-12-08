@@ -106,6 +106,17 @@
 #define CK_F_CC_CTZ
 #define CK_F_CC_POPCOUNT
 
+/*
+ * C++ does not support 'restrict' since it's C99, but most compilers
+ * support a non-standard '__restrict' flag instead.
+ */
+
+#ifdef __cplusplus
+#define CK_CC_RESTRICT __restrict
+#else
+#define CK_CC_RESTRICT restrict
+#endif
+
 CK_CC_INLINE static int
 ck_cc_ffs(unsigned int x)
 {
