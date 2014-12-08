@@ -170,6 +170,7 @@ regressions/ck_rwlock/validate/validate
 regressions/ck_rwlock/validate/validate_cpp
 regressions/ck_sequence/benchmark/ck_sequence
 regressions/ck_sequence/validate/ck_sequence
+regressions/ck_sequence/validate/ck_sequence_cpp
 regressions/ck_spinlock/benchmark/ck_anderson.LATENCY
 regressions/ck_spinlock/benchmark/ck_anderson.THROUGHPUT
 regressions/ck_spinlock/benchmark/ck_cas.LATENCY

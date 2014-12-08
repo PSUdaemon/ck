@@ -1,17 +1,25 @@
 .PHONY: check clean distribution
 
-OBJECTS=ck_sequence
+FILES=$(shell find . -name "*.c")
+OBJECTS=$(FILES:.c=) $(FILES:.c=_cpp)
 
 all: $(OBJECTS)
 
-ck_sequence: ck_sequence.c ../../../include/ck_sequence.h
-	$(CC) $(CFLAGS) -o ck_sequence ck_sequence.c
+%: %.c
+	$(CC) $(CFLAGS) $< -o $@ ../../../src/libck.a
+
+%_cpp: %.c
+	$(CXX) $(CXXFLAGS) $< -o $@ ../../../src/libck.a
 
 check: all
-	./ck_sequence $(CORES) 1
+	for d in $(OBJECTS) ; do		\
+		echo $$d $(CORES) 1;		\
+		./$$d $(CORES) 1 || exit 1;	\
+	done;
 
 clean:
 	rm -rf *~ *.o $(OBJECTS) *.dSYM *.exe
 
 include ../../../build/regressions.build
 CFLAGS+=$(PTHREAD_CFLAGS) -D_GNU_SOURCE
+CXXFLAGS+=$(PTHREAD_CXXFLAGS) -D_GNU_SOURCE

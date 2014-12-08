@@ -36,7 +36,7 @@ struct ck_sequence {
 };
 typedef struct ck_sequence ck_sequence_t;
 
-#define CK_SEQUENCE_INITIALIZER { .sequence = 0 }
+#define CK_SEQUENCE_INITIALIZER { 0 }
 
 CK_CC_INLINE static void
 ck_sequence_init(struct ck_sequence *sq)

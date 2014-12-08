@@ -126,7 +126,7 @@ main(int argc, char *argv[])
 		ck_error("ERROR: Number of threads must be greater than 0\n");
 	}
 
-	threads = malloc(sizeof(pthread_t) * n_threads);
+	threads = (pthread_t *)malloc(sizeof(pthread_t) * n_threads);
 	if (threads == NULL) {
 		ck_error("ERROR: Could not allocate memory for threads\n");
 	}
