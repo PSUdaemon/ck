@@ -34,6 +34,7 @@
 #include <strings.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include <alloca.h>
 
 #include <ck_pr.h>
 #include <ck_swlock.h>
@@ -273,7 +274,7 @@ thread_latch(void *arg)
 {
 	unsigned int i = ITERATE;
 	unsigned int l;
-	int tid = ck_pr_load_int(arg);
+	int tid = ck_pr_load_int((int *)arg);
 
         if (aff_iterate(&a)) {
                 perror("ERROR: Could not affine thread");
@@ -341,7 +342,7 @@ thread(void *arg)
 {
 	unsigned int i = ITERATE;
 	unsigned int l;
-	int tid = ck_pr_load_int(arg);
+	int tid = ck_pr_load_int((int *)arg);
 
         if (aff_iterate(&a)) {
                 perror("ERROR: Could not affine thread");
@@ -405,8 +406,9 @@ thread(void *arg)
 static void
 swlock_test(pthread_t *threads, void *(*f)(void *), const char *test)
 {
-	int i, tid[nthr];
+	int i, *tid;
 
+	tid = (int *)alloca(sizeof(int) * nthr);
 	fprintf(stderr, "Creating threads (%s)...", test);
 	for (i = 0; i < nthr; i++) {
 		ck_pr_store_int(&tid[i], i);
@@ -436,7 +438,7 @@ main(int argc, char *argv[])
 		ck_error("ERROR: Number of threads must be greater than 0\n");
 	}
 
-	threads = malloc(sizeof(pthread_t) * nthr);
+	threads = (pthread_t *)malloc(sizeof(pthread_t) * nthr);
 	if (threads == NULL) {
 		ck_error("ERROR: Could not allocate thread structures\n");
 	}
