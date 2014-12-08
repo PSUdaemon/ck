@@ -261,3 +261,4 @@ regressions/ck_swlock/validate/validate_cpp
 regressions/ck_tflock/benchmark/latency
 regressions/ck_tflock/benchmark/throughput
 regressions/ck_tflock/validate/validate
+regressions/ck_tflock/validate/validate_cpp
