@@ -153,7 +153,7 @@ main(int argc, char *argv[])
 	LOCK_INIT;
 #endif
 
-	threads = malloc(sizeof(pthread_t) * nthr);
+	threads = (pthread_t *)malloc(sizeof(pthread_t) * nthr);
 	if (threads == NULL) {
 		ck_error("ERROR: Could not allocate thread structures\n");
 		exit(EXIT_FAILURE);

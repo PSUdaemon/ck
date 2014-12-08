@@ -4,7 +4,7 @@
 #define LOCK_STATE ck_spinlock_anderson_thread_t *nad = NULL
 #define LOCK ck_spinlock_anderson_lock(&lock, &nad)
 #define UNLOCK ck_spinlock_anderson_unlock(&lock, nad)
-#define LOCK_INIT ck_spinlock_anderson_init(&lock, malloc(MAX(64,sizeof(ck_spinlock_anderson_thread_t)) * nthr), nthr)
+#define LOCK_INIT ck_spinlock_anderson_init(&lock, (ck_spinlock_anderson_thread_t *)malloc(MAX(64,sizeof(ck_spinlock_anderson_thread_t)) * nthr), nthr)
 #define LOCKED ck_spinlock_anderson_locked(&lock)
 
 #define NO_LOCAL

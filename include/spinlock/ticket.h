@@ -72,7 +72,7 @@ struct ck_spinlock_ticket {
 	CK_SPINLOCK_TICKET_TYPE value;
 };
 typedef struct ck_spinlock_ticket ck_spinlock_ticket_t;
-#define CK_SPINLOCK_TICKET_INITIALIZER { .value = 0 }
+#define CK_SPINLOCK_TICKET_INITIALIZER { 0 }
 
 CK_CC_INLINE static void
 ck_spinlock_ticket_init(struct ck_spinlock_ticket *ticket)
