@@ -49,6 +49,7 @@ regressions/ck_cohort/benchmark/ck_cohort.LATENCY
 regressions/ck_cohort/benchmark/ck_cohort.THROUGHPUT
 regressions/ck_cohort/benchmark/ck_cohort.THROUGHPUT
 regressions/ck_cohort/validate/validate
+regressions/ck_cohort/validate/validate_cpp
 regressions/ck_epoch/validate/ck_epoch_call
 regressions/ck_epoch/validate/ck_epoch_call_cpp
 regressions/ck_epoch/validate/ck_epoch_poll
