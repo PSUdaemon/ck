@@ -61,7 +61,7 @@ test_foreach(void)
 				    s, n->value);
 			}
 
-			next = CK_SLIST_NEXT(n, list_entry);
+			next = (struct test *)CK_SLIST_NEXT(n, list_entry);
 			if (next != NULL && next->value != s - 1) {
 				ck_error("\nExpected %d, but got %d.\n",
 				    s, next->value);
@@ -87,7 +87,7 @@ test_foreach(void)
 				    s, n->value);
 			}
 
-			next = CK_SLIST_NEXT(n, list_entry);
+			next = (struct test *)CK_SLIST_NEXT(n, list_entry);
 			if (next != NULL && next->value != s - 1) {
 				ck_error("\nExpected %d, but got %d.\n",
 				    s, next->value);
@@ -130,7 +130,7 @@ main(int argc, char *argv[])
 		ck_error("ERROR: Number of threads must be >= 1.\n");
 	}
 
-	thread = malloc(sizeof(pthread_t) * n_threads);
+	thread = (pthread_t *)malloc(sizeof(pthread_t) * n_threads);
 	assert(thread != NULL);
 
 	goal = atoi(argv[2]);
@@ -142,7 +142,7 @@ main(int argc, char *argv[])
 	CK_SLIST_INIT(&head);
 
 	for (i = 1; i <= goal; i++) {
-		n = malloc(sizeof *n);
+		n = (struct test *)malloc(sizeof *n);
 		assert(n != NULL);
 		n->value = i;
 		CK_SLIST_INSERT_HEAD(&head, n, list_entry);
@@ -151,7 +151,7 @@ main(int argc, char *argv[])
 	test_foreach();
 
 	for (i = 1; i <= goal; i++) {
-		n = CK_SLIST_FIRST(&head);
+		n = (struct test *)CK_SLIST_FIRST(&head);
 		CK_SLIST_REMOVE_HEAD(&head, list_entry);
 		free(n);
 	}
@@ -164,7 +164,7 @@ main(int argc, char *argv[])
 
 	fprintf(stderr, "Beginning parallel traversal...");
 
-	n = malloc(sizeof *n);
+	n = (struct test *)malloc(sizeof *n);
 	assert(n != NULL);
 	n->value = 1;
 	CK_SLIST_INSERT_HEAD(&head, n, list_entry);
@@ -177,7 +177,7 @@ main(int argc, char *argv[])
 	for (i = 2; i <= goal; i++) {
 		volatile int j;
 
-		n = malloc(sizeof *n);
+		n = (struct test *)malloc(sizeof *n);
 		assert(n != NULL);
 		n->value = i;
 		CK_SLIST_INSERT_HEAD(&head, n, list_entry);
@@ -203,7 +203,7 @@ main(int argc, char *argv[])
 		for (j = 0; j <= 1000; j++);
 
 		if (CK_SLIST_EMPTY(&target) == false) {
-			struct test *r = CK_SLIST_FIRST(&target);
+			struct test *r = (struct test *)CK_SLIST_FIRST(&target);
 			CK_SLIST_REMOVE(&target, r, test, list_entry);
 		}
 	}

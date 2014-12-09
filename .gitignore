@@ -141,8 +141,11 @@ regressions/ck_pr/validate/ck_pr_unary_cpp
 regressions/ck_pr/validate/ck_pr_xor
 regressions/ck_pr/validate/ck_pr_xor_cpp
 regressions/ck_queue/validate/ck_list
+regressions/ck_queue/validate/ck_list_cpp
 regressions/ck_queue/validate/ck_slist
+regressions/ck_queue/validate/ck_slist_cpp
 regressions/ck_queue/validate/ck_stailq
+regressions/ck_queue/validate/ck_stailq_cpp
 regressions/ck_rhs/benchmark/parallel_bytestring
 regressions/ck_rhs/benchmark/serial
 regressions/ck_rhs/validate/serial

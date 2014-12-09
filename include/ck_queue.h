@@ -138,19 +138,19 @@ struct {									\
 	ck_pr_load_ptr(&((elm)->field.sle_next))
 
 #define	CK_SLIST_FOREACH(var, head, field)					\
-	for ((var) = CK_SLIST_FIRST((head));					\
+	for ((var) = (__typeof__(var))CK_SLIST_FIRST((head));			\
 	    (var) && (ck_pr_fence_load(), 1);					\
-	    (var) = CK_SLIST_NEXT((var), field))
+	    (var) = (__typeof__(var))CK_SLIST_NEXT((var), field))
 
-#define	CK_SLIST_FOREACH_SAFE(var, head, field, tvar)				 \
-	for ((var) = CK_SLIST_FIRST(head);					 \
-	    (var) && (ck_pr_fence_load(), (tvar) = CK_SLIST_NEXT(var, field), 1);\
-	    (var) = (tvar))
+#define	CK_SLIST_FOREACH_SAFE(var, head, field, tvar)							\
+	for ((var) = (__typeof__(var))CK_SLIST_FIRST(head);						\
+	    (var) && (ck_pr_fence_load(), (tvar) = (__typeof__(tvar))CK_SLIST_NEXT(var, field), 1);	\
+	    (var) = (__typeof__(var))(tvar))
 
-#define	CK_SLIST_FOREACH_PREVPTR(var, varp, head, field)			\
-	for ((varp) = &(head)->slh_first;					\
-	    ((var) = ck_pr_load_ptr(varp)) != NULL && (ck_pr_fence_load(), 1);	\
-	    (varp) = &(var)->field.sle_next)
+#define	CK_SLIST_FOREACH_PREVPTR(var, varp, head, field)					\
+	for ((varp) = (__typeof__(varp))&(head)->slh_first;					\
+	    ((var) = (__typeof__(var))ck_pr_load_ptr(varp)) != NULL && (ck_pr_fence_load(), 1);	\
+	    (varp) = (__typeof__(varp))&(var)->field.sle_next)
 
 #define	CK_SLIST_INIT(head) do {						\
 	ck_pr_store_ptr(&(head)->slh_first, NULL);				\
@@ -237,15 +237,15 @@ struct {								\
 #define	CK_STAILQ_FIRST(head)	(ck_pr_load_ptr(&(head)->stqh_first))
 
 #define	CK_STAILQ_FOREACH(var, head, field)				\
-	for((var) = CK_STAILQ_FIRST((head));				\
+	for((var) = (__typeof__(var))CK_STAILQ_FIRST((head));		\
 	   (var) && (ck_pr_fence_load(), 1);				\
-	   (var) = CK_STAILQ_NEXT((var), field))
+	   (var) = (__typeof__(var))CK_STAILQ_NEXT((var), field))
 
 #define	CK_STAILQ_FOREACH_SAFE(var, head, field, tvar)			\
-	for ((var) = CK_STAILQ_FIRST((head));				\
+	for ((var) = (__typeof__(var))CK_STAILQ_FIRST((head));		\
 	    (var) && (ck_pr_fence_load(), (tvar) =			\
-		CK_STAILQ_NEXT((var), field), 1);			\
-	    (var) = (tvar))
+		(__typeof__(tvar))CK_STAILQ_NEXT((var), field), 1);	\
+	    (var) = (__typeof__(var))(tvar))
 
 #define	CK_STAILQ_INIT(head) do {					\
 	ck_pr_store_ptr(&(head)->stqh_first, NULL);			\
@@ -349,14 +349,14 @@ struct {									\
 #define	CK_LIST_NEXT(elm, field)	ck_pr_load_ptr(&(elm)->field.le_next)
 
 #define	CK_LIST_FOREACH(var, head, field)					\
-	for ((var) = CK_LIST_FIRST((head));					\
+	for ((var) = (__typeof__(var))CK_LIST_FIRST((head));			\
 	    (var) && (ck_pr_fence_load(), 1);					\
-	    (var) = CK_LIST_NEXT((var), field))
+	    (var) = (__typeof__(var))CK_LIST_NEXT((var), field))
 
-#define	CK_LIST_FOREACH_SAFE(var, head, field, tvar)				  \
-	for ((var) = CK_LIST_FIRST((head));					  \
-	    (var) && (ck_pr_fence_load(), (tvar) = CK_LIST_NEXT((var), field), 1);\
-	    (var) = (tvar))
+#define	CK_LIST_FOREACH_SAFE(var, head, field, tvar)							\
+	for ((var) = (__typeof__(var))CK_LIST_FIRST((head));						\
+	    (var) && (ck_pr_fence_load(), (tvar) = (__typeof__(tvar))CK_LIST_NEXT((var), field), 1);	\
+	    (var) = (__typeof__(var))(tvar))
 
 #define	CK_LIST_INIT(head) do {							\
 	ck_pr_store_ptr(&(head)->lh_first, NULL);				\

@@ -1,26 +1,27 @@
 .PHONY: check clean distribution
 
-HEADER=../../../include/ck_queue.h
-OBJECTS=ck_list ck_slist ck_stailq
+FILES=$(shell find . -name "*.c")
+OBJECTS=$(FILES:.c=) $(FILES:.c=_cpp)
 
 all: $(OBJECTS)
+
+%: %.c
+	$(CC) $(CFLAGS) $< -o $@ ../../../src/libck.a
+
+%_cpp: %.c
+	$(CXX) $(CXXFLAGS) $< -o $@ ../../../src/libck.a
 
 check: all
 	./ck_list $(CORES) 5
 	./ck_slist $(CORES) 5
 	./ck_stailq $(CORES) 1000000
-
-ck_list: $(HEADER) ck_list.c
-	$(CC) $(CFLAGS) -o ck_list ck_list.c
-
-ck_slist: $(HEADER) ck_slist.c
-	$(CC) $(CFLAGS) -o ck_slist ck_slist.c
-
-ck_stailq: $(HEADER) ck_stailq.c
-	$(CC) $(CFLAGS) -o ck_stailq ck_stailq.c
+	./ck_list_cpp $(CORES) 5
+	./ck_slist_cpp $(CORES) 5
+	./ck_stailq_cpp $(CORES) 1000000
 
 clean:
 	rm -rf *~ *.o $(OBJECTS) *.dSYM *.exe
 
 include ../../../build/regressions.build
 CFLAGS+=$(PTHREAD_CFLAGS) -D_GNU_SOURCE
+CXXFLAGS+=$(PTHREAD_CXXFLAGS) -D_GNU_SOURCE
