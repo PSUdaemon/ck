@@ -166,8 +166,11 @@ regressions/ck_rwcohort/benchmark/ck_rp.THROUGHPUT
 regressions/ck_rwcohort/benchmark/ck_wp.LATENCY
 regressions/ck_rwcohort/benchmark/ck_wp.THROUGHPUT
 regressions/ck_rwcohort/validate/ck_neutral
+regressions/ck_rwcohort/validate/ck_neutral_cpp
 regressions/ck_rwcohort/validate/ck_rp
+regressions/ck_rwcohort/validate/ck_rp_cpp
 regressions/ck_rwcohort/validate/ck_wp
+regressions/ck_rwcohort/validate/ck_wp_cpp
 regressions/ck_rwlock/benchmark/latency
 regressions/ck_rwlock/benchmark/throughput
 regressions/ck_rwlock/validate/validate

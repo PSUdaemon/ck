@@ -53,24 +53,24 @@ static int nthr;
 static ck_spinlock_fas_t global_fas_lock = CK_SPINLOCK_FAS_INITIALIZER;
 
 static void
-ck_spinlock_fas_lock_with_context(ck_spinlock_fas_t *lock, void *context)
+ck_spinlock_fas_lock_with_context(void *lock, void *context)
 {
 	(void)context;
-	ck_spinlock_fas_lock(lock);
+	ck_spinlock_fas_lock((ck_spinlock_fas_t *)lock);
 }
 
 static void
-ck_spinlock_fas_unlock_with_context(ck_spinlock_fas_t *lock, void *context)
+ck_spinlock_fas_unlock_with_context(void *lock, void *context)
 {
 	(void)context;
-	ck_spinlock_fas_unlock(lock);
+	ck_spinlock_fas_unlock((ck_spinlock_fas_t *)lock);
 }
 
 static bool
-ck_spinlock_fas_locked_with_context(ck_spinlock_fas_t *lock, void *context)
+ck_spinlock_fas_locked_with_context(void *lock, void *context)
 {
 	(void)context;
-	return ck_spinlock_fas_locked(lock);
+	return ck_spinlock_fas_locked((ck_spinlock_fas_t *)lock);
 }
 
 CK_COHORT_PROTOTYPE(fas_fas,
@@ -79,7 +79,7 @@ CK_COHORT_PROTOTYPE(fas_fas,
 LOCK_PROTOTYPE(fas_fas)
 
 static CK_COHORT_INSTANCE(fas_fas) *cohorts;
-static LOCK_INSTANCE(fas_fas) rw_cohort = LOCK_INITIALIZER;
+static LOCK_INSTANCE(fas_fas) rw_cohort;
 static int n_cohorts;
 
 static void *
@@ -172,7 +172,7 @@ main(int argc, char *argv[])
 
 	nthr = n_cohorts * threads_per_cohort;
 
-	threads = malloc(sizeof(pthread_t) * nthr);
+	threads = (pthread_t *)malloc(sizeof(pthread_t) * nthr);
 	if (threads == NULL) {
 		ck_error("ERROR: Could not allocate thread structures\n");
 	}
@@ -180,15 +180,16 @@ main(int argc, char *argv[])
 	a.delta = atoi(argv[3]);
 
 	fprintf(stderr, "Creating cohorts...");
-	cohorts = malloc(sizeof(CK_COHORT_INSTANCE(fas_fas)) * n_cohorts);
+	cohorts = (CK_COHORT_INSTANCE(fas_fas) *)malloc(sizeof(CK_COHORT_INSTANCE(fas_fas)) * n_cohorts);
 	if (cohorts == NULL) {
 		ck_error("ERROR: Could not allocate base cohort structures\n");
 	}
 	for (i = 0 ; i < n_cohorts ; i++) {
-		local_lock = malloc(sizeof(ck_spinlock_fas_t));
+		local_lock = (ck_spinlock_fas_t *)malloc(sizeof(ck_spinlock_fas_t));
 		CK_COHORT_INIT(fas_fas, cohorts + i, &global_fas_lock, local_lock,
 		    CK_COHORT_DEFAULT_LOCAL_PASS_LIMIT);
 	}
+	LOCK_INIT(fas_fas, &rw_cohort, CK_RWCOHORT_WP_DEFAULT_WAIT_LIMIT);
 	fprintf(stderr, "done\n");
 
 	fprintf(stderr, "Creating threads...");
