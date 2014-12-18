@@ -1,2 +1,3 @@
 CFLAGS+=-m64 -D__x86_64__
 CXXFLAGS+=-m64 -D__x86_64__
+LDFLAGS+=-m64
