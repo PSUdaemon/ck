@@ -36,7 +36,7 @@ ck_array_create(struct ck_malloc *allocator, unsigned int length)
 {
 	struct _ck_array *active;
 
-	active = allocator->malloc(sizeof(struct _ck_array) + sizeof(void *) * length);
+	active = allocator->malloc(sizeof(struct _ck_array) + sizeof(void *) * (length - 1));
 	if (active == NULL)
 		return NULL;
 

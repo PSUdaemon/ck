@@ -140,7 +140,7 @@ CK_CC_INLINE static unsigned int
 ck_bitmap_size(unsigned int n_bits)
 {
 
-	return ck_bitmap_base(n_bits) + sizeof(struct ck_bitmap);
+	return ck_bitmap_base(n_bits) + sizeof(struct ck_bitmap) - sizeof(unsigned int);
 }
 
 /*
