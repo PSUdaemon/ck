@@ -433,7 +433,7 @@ case $PLATFORM in
 	"i86pc")
 		RTM_ENABLE="CK_MD_RTM_DISABLE"
 		MM="${MM:-"CK_MD_TSO"}"
-		ISA=`isainfo -n 2> /dev/null || echo i386`
+		if test -z "$ISA"; then ISA=`isainfo -n 2> /dev/null || echo i386` ; fi
 		case "$ISA" in
 			"amd64")
 				RTM_ENABLE=${RTM_ENABLE_SET:-"CK_MD_RTM_DISABLE"}
@@ -627,8 +627,8 @@ elif test "$COMPILER" = "gcc" || test "$COMPILER" = "clang" || test "$COMPILER" 
 		INSTALL_LIBS="install-lib"
 	fi
 
-	CFLAGS="-D_XOPEN_SOURCE=600 -D_BSD_SOURCE -std=gnu99 -pedantic -Wall -W -Wundef -Wendif-labels -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Wstrict-prototypes -Wmissing-prototypes -Wnested-externs -Winline -Wdisabled-optimization -fstrict-aliasing -O2 -pipe -Wno-parentheses $CFLAGS"
-	CXXFLAGS="-D_XOPEN_SOURCE=600 -D_BSD_SOURCE -std=c++98 -pedantic -Wall -W -Wundef -Wendif-labels -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Winline -Wdisabled-optimization -fstrict-aliasing -O2 -pipe -Wno-parentheses $CXXFLAGS"
+	CFLAGS="-D_XOPEN_SOURCE=600 -D_BSD_SOURCE -D_DEFAULT_SOURCE -std=gnu99 -pedantic -Wall -W -Wundef -Wendif-labels -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Wstrict-prototypes -Wmissing-prototypes -Wnested-externs -Winline -Wdisabled-optimization -fstrict-aliasing -O2 -pipe -Wno-parentheses $CFLAGS"
+	CXXFLAGS="-D_XOPEN_SOURCE=600 -D_BSD_SOURCE -D_DEFAULT_SOURCE -std=c++98 -pedantic -Wall -W -Wundef -Wendif-labels -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Winline -Wdisabled-optimization -fstrict-aliasing -O2 -pipe -Wno-parentheses $CXXFLAGS"
 	PTHREAD_CFLAGS="-pthread"
 	PTHREAD_CXXFLAGS="-pthread"
 	if test "$COMPILER" = "mingw64"; then
