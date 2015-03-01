@@ -67,7 +67,7 @@ const char *negative = "negative";
 static unsigned long
 hs_hash(const void *object, unsigned long seed)
 {
-	const char *c = (char *)object;
+	const char *c = (const char *)object;
 	unsigned long h;
 
 	(void)seed;
@@ -147,7 +147,8 @@ run_test(unsigned int is, unsigned int ad)
 			if (i & 1) {
 				if (ck_rhs_put_unique(&hs[j], h, test[i]) == false)
 					ck_error("ERROR [%zu]: Failed to insert unique (%s)\n", j, test[i]);
-			} else if (ck_rhs_apply(&hs[j], h, test[i], test_unique, (char *)test[i]) == false) {
+			} else if (ck_rhs_apply(&hs[j], h, test[i], test_unique,
+			    (void *)(uintptr_t)test[i]) == false) {
 				ck_error("ERROR: Failed to apply for insertion.\n");
 			}
 
@@ -158,7 +159,8 @@ run_test(unsigned int is, unsigned int ad)
 				ck_error("ERROR: Failed to remove apply.\n");
 			}
 
-			if (ck_rhs_apply(&hs[j], h, test[i], test_negative, (char *)test[i]) == false)
+			if (ck_rhs_apply(&hs[j], h, test[i], test_negative,
+			    (void *)(uintptr_t)test[i]) == false)
 				ck_error("ERROR: Failed to apply.\n");
 
 			break;
@@ -265,8 +267,10 @@ run_test(unsigned int is, unsigned int ad)
 				ck_error("ERROR [%u]: Invalid &hs[j]: %s != %s\n", (char *)r, test[i], is);
 			}
 			/* Attempt in-place mutation. */
-			if (ck_rhs_apply(&hs[j], h, test[i], test_ip, (void *)test[i]) == false)
+			if (ck_rhs_apply(&hs[j], h, test[i], test_ip,
+			    (void *)(uintptr_t)test[i]) == false) {
 				ck_error("ERROR [%u]: Failed to apply: %s != %s\n", is, (char *)r, test[i]);
+			}
 
 			d = ck_rhs_get(&hs[j], h, test[i]) != NULL;
 			if (d == false)
